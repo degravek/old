@@ -1,10 +1,10 @@
 ---
 layout:     notebook
-title:      New Notebook
-author:     Ahmet Cecen
-tags: 		jupyter workflows template
-subtitle:   Showcasing Jupyter Notebook Translator Layout
-category:  project1
+title:      Titanic: Machine Learning from Disaster
+author:     Kyle DeGrave
+tags: 		  jupyter workflows template
+subtitle:   Predicting Titanic Survival Rates
+category:   project1
 
 notebookfilename: Untitled1
 #visualworkflow: true
