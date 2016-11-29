@@ -323,15 +323,6 @@
     "# Concluding Remarks\n",
     "In this post I've covered in detail how to connect to Twitter's application programming interface using Python's tweepy library. In the next post, I'll do some tweet collecting myself, and explore what kinds of information we can gather from Twitter users all over the world. Thanks for following along!"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
