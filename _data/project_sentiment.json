@@ -1,0 +1,547 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Introduction\n",
+    "Text analysis lies at the heart of many interesting and important machine learning problems today. These kinds of problems include things like, for instance, text classification (determining which genre a novel belongs to), authorship attribution (determining which individual authored an unknown piece of text), spam detection (determining which emails are are likely spam), and sentiment analysis (identifying the positive or negative tone attributed to certain text). Sentiment analysis in particular has gained a place of great importance in the business world in recent years, and for good reason — it is potentially a very profitable endeavor!\n",
+    "\n",
+    "With the continued rise in popularity of social media like Facebook, Twitter, and Instagram over the last decade, businesses have gained access to enormous amounts of potentially profitable data that have never been available before to any previous generation. Twitter, in particular, has been instrumental in allowing businesses to interact directly with their customers and new consumers around the world in essentially real time. As such, sentiment analysis can allow businesses to quickly identify and understand consumer attitude toward particular products, marketing strategies, etc., without the potentially arduous task of directly polling many thousands of individuals. Analyzing consumer sentiment relating to certain goods can give businesses a competitive advantage over their rivals, allowing one to quickly identifying new products that may be well-received, or pin-pointing possible improvements on existing products, thereby increasing profits significantly.\n",
+    "\n",
+    "In this post, I develop and detail an algorithm to identify the tweet sentiment of U.S. airline travelers using a homemade Naive Bayes classifier under a \"bag of words\" assumption. I find that the classifier works quite well, correctly identifying tweet sentiment about 92% of the time.\n",
+    "\n",
+    "Before we take a look at the code, let's go through a brief introduction of Naive Bayes classification and see how we can use it to identify tweet sentiment."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Naive Bayes Classification\n",
+    "In this post, we are interested in classifying the sentiment of tweets sent by U.S. airline travelers. The sentiment of a tweet refers to the \"tone\" or \"feelings\" associated with it. Sentiment can be classified as being either positive, negative, or neutral. An example tweet for each of these cases is given below.\n",
+    "\n",
+    "* Positive: What a great flight. I had a lot of fun!\n",
+    "* Negative: Awful service. Flight was delayed again.\n",
+    "* Neutral: Leaving Las Angeles in one hour.\n",
+    "\n",
+    "The first tweet (positive) conveys the feeling that the sender is happy and has had a good traveling experience, while the second tweet (negative) conveys a feeling of anger or dissatisfaction with airline service. The third tweet (neutral) conveys no sentiment; there is no identifiable positive or negative feeling or tone associated with it. To keep things simple, we will only be interested in binary classification in this post — classifying sentiment as being either \"positive\" or \"negative\". To categorize these tweets, we'll be using something called a Naive Bayes classifier.\n",
+    "\n",
+    "The Naive Bayes classifier is an algorithm which relies on a Bayesian approach to classify objects (tweets in our case). The \"naive\" part of the Naive Bayes classifier comes from the assumption that features describing a particular object are assumed to be independent of one another. For example, say you had a set of unlabeled animals that you wanted to classify as either being a chicken or a horse. Each animal had two defining features that one could use to classify them — weight and color. Here, it's safe to assume that the weight feature is independent of the color feature, and vice versa. In other words, the weight of an animal has no bearing on what its color might be, and its color has no bearing on how much the animal weighs. Of course this is a simple example, and the relationship between multiple variables in a real life classification situation is not always so clear-cut.\n",
+    "\n",
+    "In classifying tweet text, we will be relying on a \"bag of words\" approach. This means that we treat all tweets of a given labeled class as being a giant unordered group (or \"bag\") of words. When presented with an unlabeled tweet to classify, we will look at its individual words and compare the number of times they occur in the \"positive\" bag to the number times they occur in the \"negative\" bag. If the words occur more often in the positive bag, we simply label the tweet sentiment as being \"positive\", while if they occur more often in the negative bag, the tweet is labeled as \"negative\". In other words, we are interested only in word frequency in our classification. To compute the probability of a tweet belonging to a particular class $c$, we take the equation above and rewrite it as\n",
+    "\n",
+    "$$\\hat{c} = \\rm{argmax_{c}} P(t|c)P(c).$$\n",
+    "\n",
+    "We can also make the simplifaction that $\\rm{P(t|c)}$, the probability of tweet $t$ being in class $c$ can be represented by the probability of its individual words being in $c$. Mathematically, this can be written as\n",
+    "\n",
+    "$$\\rm{P(t|c)} = P(w_1|c) \\cdot P(w_2|c) \\cdot \\ldots \\cdot P(w_n|c),$$\n",
+    "\n",
+    "where $w_i$ is a single word in the tweet, and $n$ is the total number of words in the tweet. Combining the last two equations, we get\n",
+    "\n",
+    "$$\\hat{c} = \\rm{argmax_{c}} P(c)\\big[P(w_1|c) \\cdot P(w_2|c) \\cdot \\ldots \\cdot P(w_n|c)\\big].$$\n",
+    "\n",
+    "Or, more compactly,\n",
+    "\n",
+    "$$\\hat{c} = \\rm{argmax_{c}} P(c) \\prod_{i=1}^{n} P(w_i|c).$$\n",
+    "\n",
+    "# Training the Classifier\n",
+    "Okay, now that we have the procedure written down mathematically, let's put everything together and describe how to train the classifier. In order to compute $\\hat{c}$ for an unlabeled tweet, we need to compute the two terms $\\rm{P(c)}$ and $\\prod_{i=1}^{n} \\rm{P(w_i|c)}$. To compute the prior, $\\rm{P(c)}$, we simply have to compute the fraction of tweets in our training set that are of class $c$. This can be written\n",
+    "\n",
+    "$$\\rm{P(c)} = \\frac{N_c}{N_t},$$\n",
+    "\n",
+    "where $N_c$ is the number of tweets of class $c$, and $N_t$ is the total number of tweets in the training set. To find the term $\\prod_{i=1}^{n} P(w_i|c)$, we have to compute $\\rm{P(w_i|c)}$, the frequency of word $w_i$ in class $c$. To do this, we calculate\n",
+    "\n",
+    "$$\\rm{P(w_i|c)} = \\frac{count(w_i,c)}{\\sum_v count(w,c)}.$$\n",
+    "\n",
+    "In this equation, the numerator represents the number of times word $w_i$ appears in class $c$, and the denominator represents the total number of words in $c$. In some cases, we'll find that a new unclassified tweet contains a word that is not in the training set at all. In that case the numerator goes to zero, and since our method dictates that we multiply individual word probabilitites together, the overall probability of a tweet being in class $c$ automatically goes to zero. To get around this, we can introduce a Laplace smoothing factor so that even if a word is not contained in class $c$, we can still compute a non-zero probability value. We therefore modify the above equation to look like\n",
+    "\n",
+    "$$\\rm{P(w_i|c)} = \\frac{count(w_i,c)+1}{\\sum_v count(w,c)+N_v}.$$\n",
+    "\n",
+    "Notice that even if $\\rm{count(w_i,c)}$ is zero, the $+1$ keeps $\\rm{P(w_i|c)}$ from going to zero. The denominator also contains a new term, $\\rm{N_v}$. This is called the vocabulary &#8212; the number of unique words in the full training set. So to summarize, before we can classify a new tweet, we need to train the classifier. During the training procedure, we must compute\n",
+    "\n",
+    "<ol>\n",
+    "<li>The priors $\\rm{P(c)}$ for each class $c$</li>\n",
+    "<li>The list of all words in each class $c$</li>\n",
+    "<li>The number of unique words in the training set (the vocabulary)</li>\n",
+    "</ol>\n",
+    "\n",
+    "Okay, now that we have some understanding of how the classifier works, we can go on and explore the data!\n",
+    "\n",
+    "# Tweet Data\n",
+    "Let's start by taking a look at the data.</p>"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "IndentationError",
+     "evalue": "unexpected indent (<ipython-input-1-c4bc33a01623>, line 3)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-1-c4bc33a01623>\"\u001b[0;36m, line \u001b[0;32m3\u001b[0m\n\u001b[0;31m    tweet_id airline_sentiment  airline_sentiment_confidence  0  570306133677760513           neutral                        1.0000\u001b[0m\n\u001b[0m    ^\u001b[0m\n\u001b[0;31mIndentationError\u001b[0m\u001b[0;31m:\u001b[0m unexpected indent\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.head()\n",
+    "\n",
+    "             tweet_id airline_sentiment  airline_sentiment_confidence  \\\n",
+    "0  570306133677760513           neutral                        1.0000   \n",
+    "1  570301130888122368          positive                        0.3486   \n",
+    "2  570301083672813571           neutral                        0.6837   \n",
+    "3  570301031407624196          negative                        1.0000   \n",
+    "4  570300817074462722          negative                        1.0000   \n",
+    "\n",
+    "  negativereason  negativereason_confidence         airline  \\\n",
+    "0            NaN                        NaN  Virgin America   \n",
+    "1            NaN                     0.0000  Virgin America   \n",
+    "2            NaN                        NaN  Virgin America   \n",
+    "3     Bad Flight                     0.7033  Virgin America   \n",
+    "4     Can't Tell                     1.0000  Virgin America   \n",
+    "\n",
+    "  airline_sentiment_gold        name negativereason_gold  retweet_count  \\\n",
+    "0                    NaN     cairdin                 NaN              0   \n",
+    "1                    NaN    jnardino                 NaN              0   \n",
+    "2                    NaN  yvonnalynn                 NaN              0   \n",
+    "3                    NaN    jnardino                 NaN              0   \n",
+    "4                    NaN    jnardino                 NaN              0   \n",
+    "\n",
+    "                                                text tweet_coord  \\\n",
+    "0                @VirginAmerica What @dhepburn said.         NaN   \n",
+    "1  @VirginAmerica plus you've added commercials t...         NaN   \n",
+    "2  @VirginAmerica I didn't today... Must mean I n...         NaN   \n",
+    "3  @VirginAmerica it's really aggressive to blast...         NaN   \n",
+    "4  @VirginAmerica and it's a really big bad thing...         NaN   \n",
+    "\n",
+    "               tweet_created tweet_location               user_timezone  \n",
+    "0  2015-02-24 11:35:52 -0800            NaN  Eastern Time (US & Canada)  \n",
+    "1  2015-02-24 11:15:59 -0800            NaN  Pacific Time (US & Canada)  \n",
+    "2  2015-02-24 11:15:48 -0800      Lets Play  Central Time (US & Canada)  \n",
+    "3  2015-02-24 11:15:36 -0800            NaN  Pacific Time (US & Canada)  \n",
+    "4  2015-02-24 11:14:45 -0800            NaN  Pacific Time (US & Canada)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can see the data contain information regarding the the names of the various U.S. airlines companies, the text contained in each user's tweet, tweet sentiment (postive, negative, or neutral), the reason for any negative sentiment toward a particular airline, user location where available, etc. Here, we will try and identify tweet sentiment based solely on the text of the tweet, ignoring all other data columns.\n",
+    "\n",
+    "Let's start by loading in the appropriate Python libraries and reading in the tweet data. We then grab only data columns 'text' and 'airline_sentiment'."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "from sklearn.cross_validation import train_test_split\n",
+    "from stop_words import get_stop_words\n",
+    "import matplotlib.pyplot as plt\n",
+    "from __future__ import division\n",
+    "from collections import Counter\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import string\n",
+    "import re\n",
+    "\n",
+    "import matplotlib.pyplot as mp\n",
+    "%matplotlib inline\n",
+    "\n",
+    "tweets = pd.read_csv('/Users/degravek/Downloads/Tweets.csv', header=0)\n",
+    "\n",
+    "df = tweets[['airline_sentiment', 'text']]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "At the moment, the full set of 14,640 tweets is comprised of 2,363 positive ones, 9,178 negative ones, and 3,099 neutral ones. The code snippet belows allows us to define the number of different classes we'll divide the tweets into. In this particular post, we are only interested in binary classification; in other words classifying tweets as either positive or negative and ignoring the neutral ones. We therefore set n_class = 2. We can also define the number of tweets per class we'll use in our training set. Because the positive and negative classes have a very different number of tweets (i.e, the classes are unbalanced), we set n_tweet = 2,363, forcing them to have the same number. If the classes are severely unbalanced (as is the case here, though this is quite common in practice) the classification algorithm might learn that always guessing the \"negative\" class is a good thing to do, and will misclassify many of the positive instances. The df_pos and df_neg dataframes are then concatenated to create one set of data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "n_class = 2\n",
+    "n_tweet = 2363\n",
+    "\n",
+    "# Divide into number of classes\n",
+    "if n_class == 2:\n",
+    "    df_pos = df.copy()[df.airline_sentiment == 'positive'][:n_tweet]\n",
+    "    df_neg = df.copy()[df.airline_sentiment == 'negative'][:n_tweet]\n",
+    "    df_neu = pd.DataFrame()\n",
+    "    df = pd.concat([df_pos, df_neg], ignore_index=True).reset_index(drop=True)\n",
+    "elif n_class == 3:\n",
+    "    df_pos = df.copy()[df.airline_sentiment == 'positive'][:n_tweet]\n",
+    "    df_neg = df.copy()[df.airline_sentiment == 'negative'][:n_tweet]\n",
+    "    df_neu = df.copy()[df.airline_sentiment == 'neutral'][:n_tweet]\n",
+    "    df = pd.concat([df_pos, df_neg, df_neu], ignore_index=True).reset_index(drop=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Processing the Data\n",
+    "Before we can start classifying tweets, we first need to clean them up a little bit. One may note that tweets in their raw form can be quite messy; they contain several forms of punctuation, capitalizations, url links, etc. Remember, we are only interested in looking at specific words and their usage here, so these things matter to us. To this end, we can define a couple of functions that we'll use to process all the tweets in our data set. The first function, ProTweets, takes in a tweet and strips all punctuation from the text, including !\"#$%&'()*+,-/:;<=>?@[\\]^_`{|}~ characters (first line), replaces any string starting with \"www\" or \"http\" with the term \"urlsite\" (second line), replaces any numerical value with the term \"contnum\" (third line), replaces multiple whitespaces with a single space (fourth line), and makes all words lower case (fifth line).\n",
+    "\n",
+    "The second function we define, rmStopWords, removes \"stop words\" from each tweet. Stop words are words that, even though they're common in speech, really don't convey any sentiment or feeling. These include words like \"at\", \"and\", \"the\", etc. The function splits each tweet into its individual words, and any word in the list stop_words is removed."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def ProTweets(tweet):\n",
+    "    tweet = ''.join(c for c in tweet if c not in string.punctuation)\n",
+    "    tweet = re.sub('((www\\S+)|(http\\S+))', '', tweet)\n",
+    "    tweet = re.sub(r'\\d+', '', tweet)\n",
+    "    tweet = re.sub(' +',' ', tweet)\n",
+    "    tweet = tweet.lower().strip()\n",
+    "    return tweet\n",
+    "\n",
+    "def rmStopWords(tweet, stop_words):\n",
+    "    text = tweet.split()\n",
+    "    text = ' '.join(word for word in text if word not in stop_words)\n",
+    "    return text"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let's now read in a list of stop words and process each tweet in the dataframe using the two functions we've defined above."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "stop_words = get_stop_words('english')\n",
+    "stop_words = [''.join(c for c in s if c not in string.punctuation) for s in stop_words]\n",
+    "stop_words = [t.encode('utf-8') for t in stop_words]\n",
+    "\n",
+    "# Preprocess all tweet data\n",
+    "pro_tweets = []\n",
+    "for tweet in df['text']:\n",
+    "    processed = ProTweets(tweet)\n",
+    "    pro_stopw = rmStopWords(processed, stop_words)\n",
+    "    pro_tweets.append(pro_stopw)\n",
+    "\n",
+    "df['text'] = pro_tweets"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now that the data has been processed, we have to split it up into separate training and test sets. Generally, for a given set of data, about two thirds is randomly chosen and placed in the training set, while the other one third is reserved for the test set. Fortunately for us, Python's Scikit-Learn package has a nice built-in function called train_test_split that allows us to divide the data in one call."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "X_train, X_test, y_train, y_test = train_test_split(df['text'], df['airline_sentiment'], test_size=0.33, random_state=0)\n",
+    "\n",
+    "df_train = pd.DataFrame()\n",
+    "df_test = pd.DataFrame()\n",
+    "\n",
+    "df_train['text'] = X_train\n",
+    "df_train['airline_sentiment'] = y_train\n",
+    "df_train = df_train.reset_index(drop=True)\n",
+    "\n",
+    "df_test['text'] = X_test\n",
+    "df_test['airline_sentiment'] = y_test\n",
+    "df_test = df_test.reset_index(drop=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# The Tweet Classifier\n",
+    "Okay, now the fun part! Below we define our own Python class called TweetNBClassifier, which allows us to fit the classifier on our training data, predict the sentiment of each tweet (positive or negative), and score our results (i.e., determine how many tweets we've classified correctly). The class simply works sort of like a container for the various functions we'll need soon. We'll go through each section of the classifier and describe what it does."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "class TweetNBClassifier(object):\n",
+    "\n",
+    "    def __init__(self, df_train):\n",
+    "        self.df_train = df_train\n",
+    "        self.df_pos = df_train.copy()[df_train.airline_sentiment == 'positive']\n",
+    "        self.df_neg = df_train.copy()[df_train.airline_sentiment == 'negative']\n",
+    "        self.df_neu = df_train.copy()[df_train.airline_sentiment == 'neutral']\n",
+    "\n",
+    "    def fit(self):\n",
+    "        Pr_pos = df_pos.shape[0]/self.df_train.shape[0]\n",
+    "        Pr_neg = df_neg.shape[0]/self.df_train.shape[0]\n",
+    "        Pr_neu = df_neu.shape[0]/self.df_train.shape[0]\n",
+    "        self.Prior  = (Pr_pos, Pr_neg, Pr_neu)\n",
+    "\n",
+    "        self.pos_words = ' '.join(self.df_pos['text'].tolist()).split()\n",
+    "        self.neg_words = ' '.join(self.df_neg['text'].tolist()).split()\n",
+    "        self.neu_words = ' '.join(self.df_neu['text'].tolist()).split()\n",
+    "\n",
+    "        all_words = ' '.join(self.df_train['text'].tolist()).split()\n",
+    "\n",
+    "        self.vocab = len(Counter(all_words))\n",
+    "\n",
+    "        wc_pos = len(' '.join(self.df_pos['text'].tolist()).split())\n",
+    "        wc_neg = len(' '.join(self.df_neg['text'].tolist()).split())\n",
+    "        wc_neu = len(' '.join(self.df_neu['text'].tolist()).split())\n",
+    "        self.word_count = (wc_pos, wc_neg, wc_neu)\n",
+    "        return self\n",
+    "\n",
+    "    def predict(self, df_test):\n",
+    "        class_choice = ['positive', 'negative', 'neutral']\n",
+    "\n",
+    "        classification = []\n",
+    "        for tweet in df_test['text']:\n",
+    "            text = tweet.split()\n",
+    "\n",
+    "            val_pos = np.array([])\n",
+    "            val_neg = np.array([])\n",
+    "            val_neu = np.array([])\n",
+    "            for word in text:\n",
+    "                tmp_pos = np.log(self.pos_words.count(word)+1)\n",
+    "                tmp_neg = np.log(self.neg_words.count(word)+1)\n",
+    "                tmp_neu = np.log(self.neu_words.count(word)+1)\n",
+    "                val_pos = np.append(val_pos, tmp_pos)\n",
+    "                val_neg = np.append(val_neg, tmp_neg)\n",
+    "                val_neu = np.append(val_neu, tmp_neu)\n",
+    "\n",
+    "            denom_pos = len(text)*np.log(self.word_count[0]+self.vocab)\n",
+    "            denom_neg = len(text)*np.log(self.word_count[1]+self.vocab)\n",
+    "            denom_neu = len(text)*np.log(self.word_count[2]+self.vocab)\n",
+    "\n",
+    "            val_pos = np.log(self.Prior[0]) + np.sum(val_pos) - denom_pos\n",
+    "            val_neg = np.log(self.Prior[1]) + np.sum(val_neg) - denom_neg\n",
+    "            val_neu = np.log(self.Prior[2]) + np.sum(val_neu) - denom_neu\n",
+    "\n",
+    "            probability = (val_pos, val_neg, val_neu)\n",
+    "            classification.append(class_choice[np.argmax(probability)])\n",
+    "        return classification\n",
+    "\n",
+    "    def score(self, feature, target):\n",
+    "        comp_c, comp_i = (0,0)\n",
+    "        tp, tn, fp, fn = (0,0,0,0)\n",
+    "        for i in range(0,len(feature)):\n",
+    "            if feature[i] == target[i]:\n",
+    "                comp_c += 1\n",
+    "                if (target[i] == 'positive') & (feature[i] == 'positive'): tp += 1\n",
+    "            else:\n",
+    "                comp_i += 1\n",
+    "                if (target[i] == 'positive') & (feature[i] == 'negative'): fn += 1\n",
+    "                if (target[i] == 'negative') & (feature[i] == 'positive'): fp += 1\n",
+    "\n",
+    "        accuracy  = comp_c/(comp_c + comp_i)\n",
+    "        precision = tp/(tp + fp)\n",
+    "        recall    = tp/(tp + fn)\n",
+    "        return accuracy, precision, recall"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "TweetNBClassifier initially takes in only one argument when called &#8212; the training data set. Function __init__ then proceeds to initialize variables that will be used in the functions directly below it. In __init__, dataframe df_train is divided into dataframes df_pos, df_neg, and df_neu, which contain all the positive, negative, and neutral tweets in our training set respectively. Since we're only doing a binary classification here, dataframe df_neu is empty.\n",
+    "\n",
+    "The first few lines of the fit function compute the \"prior\" probabilities necessary for classification as described in the Naive Bayes Classification section above (i.e., the number of tweets in each class divided by the total number of tweets in the training set). Directly below this, we compute the number of words in each of the dataframes df_pos, df_neg, and df_neu. Variable \"all_words\" collects every word in the training set, while variable \"vocab\" finds the number of <i>unique</i> words. This is referred to as the \"vocabulary\" of the data. Lastly, wc_pos, wc_neg, and wc_neu count the total number of words in df_pos, df_neg, and df_neu respectively.\n",
+    "\n",
+    "The predict function loops through all tweets in our test data set, and uses the fit values computed above to predict which class each belongs to. To do this, each tweet is first split into its individual word components and, for each word in the tweet, we compute the fractions\n",
+    "\n",
+    "$$P(w_i|c) = \\log \\Big[ \\frac{count(w_i,c)+1}{\\sum_{w\\in V}count(w,c) + |V|} \\Big]$$\n",
+    "\n",
+    "and add them together. Whichever class has the larger probability is then chosen as the predicted class. A nice worked example of this procedure can be found [here](https://web.stanford.edu/~jurafsky/slp3/7.pdf).\n",
+    "\n",
+    "Lastly, the score function scores our results in terms of how many tweets we classify correctly. To do this, we loop over each of the classification labels our algorithm has produced, and compare them to the known labels of the test data. The fraction of correct tweets is then given as our accuracy score.</p>\n",
+    "\n",
+    "Okay, let's run the classifier and see how well we do on our test data!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "tnb = TweetNBClassifier(df_train)\n",
+    "tnb = tnb.fit()\n",
+    "predict = tnb.predict(df_test)\n",
+    "score = tnb.score(predict, df_test.airline_sentiment.tolist())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 86,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(0.9243589743589744, 0.9568845618915159, 0.8877419354838709)"
+      ]
+     },
+     "execution_count": 86,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "(0.9243589743589744, 0.9568845618915159, 0.8877419354838709)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 87,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n277boU1f/EfZ2dmK6tpOw0YPVFrKWcV/s02S9OO3/9VvJ8/oH8/2V1amxfZQSQM9+lQf5eTkyucq\n5wCKKBszvE5XJgJhcnKyZsyYocmTJ7u7FPxJPj4+sliyi4xbLBb791fbN9tiKTKelWWRYRjy8S28\nr1e5crrj9paSpLvatlGrlrep/6ChCgwM0F1t20iS2rW5U6P+9bTemPW2evd/TFarVbVq1NA/nxii\naTNmFeoaAnCcJdNin9L9I2+f/L8YWrKK/p4u0GdQN3X7WxcN6DrcPh285asf9Oq8cRo+epB+2LRd\nVqtV2dk5Gv34JL0w7WmNnf6MDMOQJStb772+SH2H9NCl/zddDaCoMhEIz507p5UrVxIIbwAhwUE6\nc5lp4TMp+WNVQopOJxfaN7Xok+MptrEql5mK/qNmkREKCQ7S2s+/sgdCSerTs4e6PfiA9h84IC+v\ncgpt2FDLVn4mwzBUq2bNqxwRwLWknjmroCoBRcYDQ/LHUk+nXXHfB3v/RT9vTSxyb2D8N9s05F/9\nVa16iJKTTkuSjh06ocHdn1HNutXlX8lfRw8elyUrW08896h++XG3E68IN7qy8hCIs5WKQLhhw4ar\nfn/8OMsF3ChCGzbUT9t/VkZGRqEHS3Ym7pJhGGrUsOhDIwUaNWygn3fsLDL+S0KifH19VavWtcNb\nlsWiCxcvFBn39fVRZJNw+8/xP/4kHx8fNb/KuogAru3gvsNq2qqxfMv7FnqwJCyyoaxWqw7sPXLF\nfQOCbpKnZ9FnH8uV85QkeXh6Fvnu2KET9l+3at9choeh7fG//IkrAMyhVATCJ598UoZh6GpLIpo1\nsd9o7u14j+Z/+JGWrlilAX0fkZT/5pJVa9Ypskm4qlYJkSSlpKTq/IULqlnjVnna/tC/N+oerd+4\nSes3blKnqLsl5a9D+PXGb3R3+3byKpf/r/OlzEwZMuxPChf4euM3+v3382rSOOyqNe74JUEbv9ms\nPj17qEKFCk68esB8vv3qB/WMeUj39+ykZQvy1yEs51VOf+l2t/bs/NXeIQwIrqwK/uV18tgp+5tF\nko4kq0XrSPlXqqALv1+UlP/fgg6d2+rSxUwlH//tiuf19vFWzPA+Sj2drk2ff3/F7YD/z/AwZ94o\nFYEwJCRE48aNU6dOnS77/Z49exQdHV3CVcEVIsIb676OUXpz1jtKTUtTzVvz31RyMvmUXh472r7d\n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\n",
+      "text/plain": [
+       "<matplotlib.figure.Figure at 0x115d2bb38>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "cm = confusion_matrix(df_test['airline_sentiment'], predict).T\n",
+    "cm = cm.astype('float')/cm.sum(axis=0)\n",
+    "\n",
+    "fig, ax = mp.subplots()\n",
+    "sns.heatmap(cm, annot=True);\n",
+    "ax.set_xlabel('True Label')\n",
+    "ax.set_ylabel('Predicted Label')\n",
+    "ax.xaxis.set_label_position('top')\n",
+    "ax.xaxis.tick_top()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "After running the classifier, we see that the score function outputs three values. The first value is the accuracy score which suggests that we are able to correctly classify U.S. Airline tweet sentiment approximately 92% of the time! Not bad at all! The other two values refer to the precision and recall respectively. We can take a look at a graphic to see more clearly what these two terms mean."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 88,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid syntax (<ipython-input-88-c5d7ddfba8c2>, line 1)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-88-c5d7ddfba8c2>\"\u001b[0;36m, line \u001b[0;32m1\u001b[0m\n\u001b[0;31m    insert figure\u001b[0m\n\u001b[0m                ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+     ]
+    }
+   ],
+   "source": [
+    "insert figure"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The y-axis of the table represents all of the tweets our algorithm identified as either positive (\"system positive\") or negative (\"system negative\"), while the x-axis represents all of the tweets in our test data set with known positive (\"gold positive\") or negative (\"gold negative\") labels. Inside the table, we see the terms \"true positive\", \"false positive\", \"true negative\", and \"false negative\". These are defined as\n",
+    "\n",
+    "True positive: Tweets that our algorithm correctly classifies as having positive sentiment.\n",
+    "False positive: Tweets that our algorithm incorrectly identifies as having positive sentiment, when in fact the tweet is actually negative.\n",
+    "True negative: Tweets that our algorithm correctly classifies as having negative sentiment.\n",
+    "False negative: Tweets that our algorithm incorrectly identifies as having negative sentiment, when in fact the tweet is actually positive.\n",
+    "So, in our case, precision refers to the fraction of tweets that our algorithm classified as positive which were in fact actually positive according to the labels in the test data set. In other words, of all the tweets classified as positive, how many were actually correctly identified? Precision is computed as\n",
+    "\n",
+    "* True positive: Tweets that our algorithm correctly classified as having positive sentiment.\n",
+    "* False positive: Tweets that our algorithm incorrectly identified as having positive sentiment, when in fact the tweet was actually negative.\n",
+    "* True negative: Tweets that our algorithm correctly classified as having negative sentiment.\n",
+    "* False negative: Tweets that our algorithm incorrectly identified as having negative sentiment, when in fact the tweet was actually positive.\n",
+    "\n",
+    "So, in our case, precision refers to the fraction of tweets that our algorithm classified as positive which were in fact actually positive according to the labels in the test data set. In other words, of all the tweets classified as positive, how many were actually correctly identified? Precision is computed as\n",
+    "\n",
+    "$$\\rm{Precision} = \\frac{true positives}{true positives + false positives} = 96\\%.$$\n",
+    "\n",
+    "Similarly, recall answers the question \"of all of the positive tweets labeled in the test set, how many do we classify correctly\"? Recall is computed as\n",
+    "\n",
+    "$$\\rm{Recall} = \\frac{true positives}{true positives + false negatives} = 0.89\\%.$$"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this post we took a detailed look at the simple, yet powerful Naive Bayes classifier, and developed an algorithm to accurately classify U.S. Airline tweet sentiment. We found that the classifier correctly identified tweet sentiment about 92% of the time. However, there are still several improvements we could make to this algorithm. Text classification performance can sometimes be improved by using a \"binary approach\" &#8212; in other words, simply looking at whether or not a word exists in a tweet rather than its frequency (the number of times it's used). We could also adapt the algorithm to account for negation, which is often observed in real speech. For example, the tweet \"That flight was really bad\" has a different sentiment than one which says \"That flight was really not bad\". Additionally, in terms of examining how well the code generalizes, we could include a way to perform cross-validation to check that our accuracy, precision, and recall will hold up when presented with new, unseen data.\n",
+    "\n",
+    "Well, that's all I have for now. Thanks for following along!"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda root]",
+   "language": "python",
+   "name": "conda-root-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.5.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
