@@ -157,7 +157,7 @@
    "source": [
     "The beginning of the script is where we import tweepy and a few of its methods called Stream, StreamListener, and OAuthHandler. OAuthHandler will allow us to access the API using our authentication keys we set up in the Getting the API Keys section above. StreamListener is responsible for collecting tweets in real time, and Stream has a method called \"filter\" which allows us to filter worldwide tweets by certain keywords that we can set. Below this is where we finally set the Access Token, Access Key, Consumer Token, and Consumer Key values that we created earlier. We then define a new class called MyListener which contains two calls - one to on_data, and one to on_error. If possible, on_data takes a tweet, prints the text, and appends it to a file called ufc.json (the JSON extension stands for JavaScript Object Notation). If on_data cannot do this, on_error prints the error and continues listening for new tweets. Lastly, we set the filter keywords. In our case, these keywords are '#UFC', 'UFC', and 'Ultimate Fighting'.\n",
     "\n",
-    "After running the above code, one will notice that each tweet actually contains a huge amount of information, and that all of it is saved to the JSON output file. The figure below shows the anatomy of a single tweet as an easy-to-read graphic, borrowed from Wei Xu's API tutorial found here."
+    "After running the above code, one will notice that each tweet actually contains a huge amount of information, and that all of it is saved to the JSON output file. The figure below shows the anatomy of a single tweet as an easy-to-read graphic, borrowed from Wei Xu's API tutorial found [here](http://socialmedia-class.org/twittertutorial.html)."
    ]
   },
   {
