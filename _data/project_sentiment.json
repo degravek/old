@@ -514,7 +514,7 @@
     "\n",
     "$$\\rm{Precision} = \\frac{true positives}{true positives + false positives} = 96\\%.$$\n",
     "\n",
-    "Similarly, recall answers the question \"of all of the positive tweets labeled in the test set, how many do we classify correctly\"? Recall is computed as\n",
+    "Similarly, recall answers the question \"of all of the positive tweets labeled in the test set, how many do we classify correctly?\" Recall is computed as\n",
     "\n",
     "$$\\rm{Recall} = \\frac{true positives}{true positives + false negatives} = 0.89\\%.$$"
    ]
