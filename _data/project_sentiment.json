@@ -413,7 +413,7 @@
     "\n",
     "The predict function loops through all tweets in our test data set, and uses the fit values computed above to predict which class each belongs to. To do this, each tweet is first split into its individual word components and, for each word in the tweet, we compute the fractions\n",
     "\n",
-    "$$P(w_i|c) = \\log \\Big[ \\frac{count(w_i,c)+1}{\\sum_{w\\in V}count(w,c) + |V|} \\Big]$$\n",
+    "$$P(w_i\\vert c) = \\log \\Big[ \\frac{count(w_i,c)+1}{\\sum_{w\\in V}count(w,c) + |V|} \\Big]$$\n",
     "\n",
     "and add them together. Whichever class has the larger probability is then chosen as the predicted class. A nice worked example of this procedure can be found [here](https://web.stanford.edu/~jurafsky/slp3/6.pdf).\n",
     "\n",
@@ -539,15 +539,6 @@
     "\n",
     "Well, that's all I have for now. Thanks for following along!"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
