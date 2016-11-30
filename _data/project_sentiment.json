@@ -505,12 +505,6 @@
    "source": [
     "The y-axis of the table represents all of the tweets our algorithm identified as either positive (\"system positive\") or negative (\"system negative\"), while the x-axis represents all of the tweets in our test data set with known positive (\"gold positive\") or negative (\"gold negative\") labels. Inside the table, we see the terms \"true positive\", \"false positive\", \"true negative\", and \"false negative\". These are defined as\n",
     "\n",
-    "True positive: Tweets that our algorithm correctly classifies as having positive sentiment.\n",
-    "False positive: Tweets that our algorithm incorrectly identifies as having positive sentiment, when in fact the tweet is actually negative.\n",
-    "True negative: Tweets that our algorithm correctly classifies as having negative sentiment.\n",
-    "False negative: Tweets that our algorithm incorrectly identifies as having negative sentiment, when in fact the tweet is actually positive.\n",
-    "So, in our case, precision refers to the fraction of tweets that our algorithm classified as positive which were in fact actually positive according to the labels in the test data set. In other words, of all the tweets classified as positive, how many were actually correctly identified? Precision is computed as\n",
-    "\n",
     "* True positive: Tweets that our algorithm correctly classified as having positive sentiment.\n",
     "* False positive: Tweets that our algorithm incorrectly identified as having positive sentiment.\n",
     "* True negative: Tweets that our algorithm correctly classified as having negative sentiment.\n",
