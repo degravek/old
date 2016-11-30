@@ -11,13 +11,8 @@
     "\n",
     "In this post, I develop and detail an algorithm to identify the sentiment of tweets sent by U.S. airline travelers. This algorithm follows a naive Bayes approach under a \"bag of words\" assumption. I find that the classifier works quite well, correctly identifying tweet sentiment about 92% of the time.\n",
     "\n",
-    "Before we take a look at the code, let's go through a brief introduction of Naive Bayes classification and see how we can use it to identify tweet sentiment."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+    "Before we take a look at the code, let's go through a brief introduction of Naive Bayes classification and see how we can use it to identify tweet sentiment.\n",
+    "\n",
     "# Naive Bayes Classification\n",
     "In this post, we are interested in classifying the sentiment of tweets sent by U.S. airline travelers. The sentiment of a tweet refers to the \"tone\" or \"feelings\" associated with the text. Sentiment can be classified as being either positive, negative, or neutral. An example tweet for each of these cases is given below.\n",
     "\n",
@@ -39,7 +34,7 @@
     "\n",
     "As described above, the Bayesian approach is conditional in the sense that probabilities are computed based on \"degrees of belief\" of certain occurrences that contribute to a final probability we're trying to predict. For example, the U.S. has a population of about 320 million at the present time. If we are told that 3.2 million people currently living in the U.S. will be diagnosed with cancer at some point in their lives, we might expect our chances of getting cancer are 1%. However, this value does not take into account several important factors which may lead to a better probability estimate. For example, what if some people are smokers? What if some people do not exercise reagularly, and are generally unhealthy? As a toy example let's compute the probability of an individual being diagnosed with cancer given that they smoke regularly. In this case, the terms in the equation above would be\n",
     "\n",
-    "* $P(A\\vert B)$, the probability of getting cancer (event A) given that an individual smoke (event B).\n",
+    "* $P(A\\vert B)$, the probability of getting cancer (event A) given that an individual is a smoker (event B).\n",
     "* $P(B\\vert A)$, the probability that an individual diagnosed with cancer is a smoker.\n",
     "* $P(A)$, the probability of anyone (smoker or not) being diagnosed with cancer.\n",
     "* $P(B)$, the probability that an individual is a smoker.\n",
