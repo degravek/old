@@ -1,0 +1,461 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Introduction\n",
+    "The Ultimate Fighting Championchip (UFC) is a premier mixed martial arts (MMA) organization founded in 1993, and headquartered in the United States. The organization contains over 500 of the worlds top fighters who continually pit themselves against one another for a shot at winning the championchip belt in their respective weight class. To date, the UFC has held over 300 televised events, taking place about once every month on average at various locations around the world.\n",
+    "\n",
+    "On March 6, 2016 at UFC 196, UFC Featherweight Champion Conor McGregor faced off against Nate Diaz in what was to become a strong cadidate for fight of the year. McGregor was the heavy favorite going into the bout, with Diaz taking the fight on only eleven days notice as a replacement for another injured fighter. In a shocking upset, Diaz finished McGregor by submission in the very first round, taking the MMA community by storm. On August 20, 2016 at UFC 202, a heavilyanticipated rematch between the two fighters took place in Las Vegas, Nevada. McGregor went in again as a 2 to 1 fan favorite, and again, the fight did not disappoint. The bout went all five rounds, with McGregor winning by majority decision.\n",
+    "\n",
+    "In this analysis, I try my hand for the first time at Twitter mining using an application programming interface (API) written in Python (visit this link for a description of the API). The API was used to stream tweets by MMA fans around the world in the 15 minutes leading up to the Diaz McGregor rematch. In total, over 16,000 tweets were collected for the following analysis. By digging through these Tweets, there are several questions I hope to address:\n",
+    "\n",
+    "From which countries/locations are the tweets originating?\n",
+    "What does the distribution of languages spoken by these users look like?\n",
+    "What what was the variation in tweet rate (tweets per second) over the 15 minute time span?\n",
+    "Which fighter was mentioned most often?\n",
+    "We begin the analysis by looping over the JSON data file line by line, and storing the tweets in a list. The JSON file contains a very large amount of useful information, along with many other string characters and expressions that we are not interested in analyzing. A dataframe is created, and we fill it by parsing the data to isolate tweet content, language, location, time zone, and time-of-tweet. Many columns contain several missing entries of type \"None\", and so these are replaced with NaN's."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "from mpl_toolkits.basemap import Basemap\n",
+    "from wordcloud import WordCloud, STOPWORDS\n",
+    "from pygeocoder import Geocoder\n",
+    "import seaborn as sns\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import json\n",
+    "import re\n",
+    "\n",
+    "import matplotlib.pyplot as mp\n",
+    "%matplotlib inline\n",
+    "\n",
+    "data_path = '/Users/degravek/Downloads/ufc.json'\n",
+    "\n",
+    "tweets_data = []\n",
+    "tweets_file = open(data_path, \"r\")\n",
+    "for line in tweets_file:\n",
+    "    try:\n",
+    "        tweet = json.loads(line)\n",
+    "        tweets_data.append(tweet)\n",
+    "    except:\n",
+    "        continue\n",
+    "\n",
+    "df = pd.DataFrame()\n",
+    "df['Text'] = list(map(lambda tweet: tweet.get('text', None), tweets_data))\n",
+    "df['Language'] = list(map(lambda tweet: tweet.get('lang', None), tweets_data))\n",
+    "df['Location'] = list(map(lambda tweet: tweet.get('user', {}).get('location'), tweets_data))\n",
+    "df['Tzone'] = list(map(lambda tweet: tweet.get('user', {}).get('time_zone'), tweets_data))\n",
+    "df['Tstamp'] = list(map(lambda tweet: tweet.get('timestamp_ms', None), tweets_data))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Looking at Languages\n",
+    "Once the data are in dataframe format, it is straight forward to examine the various languages spoken by the users. The first thing I note is that the language column is composed of entries like \"en\", \"es\", \"pt\", etc., which are short abbreviations for the different languages. For clarity, we can make a Python dictionary which maps these abbreviations to the full \"English\", \"Spanish\", \"Portuguese\", etc., languages. We can then invoke the value_counts() command to find the number of users speaking each language, and plot the values as a bar chart."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "country_map = {'en':'English', 'und':'Undetermined', 'pt':'Portuguese', 'es':'Spanish', 'ja':'Japanese', 'fr':'French', 'pl':'Polish', 'ru':'Russian', 'de':'Danish', 'ar':'Arabic'}\n",
+    "\n",
+    "df['Language'] = list(df['Language'].map(country_map))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.text.Text at 0x1a84ddc50>"
+      ]
+     },
+     "execution_count": 53,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<matplotlib.figure.Figure at 0x1ac8635f8>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "sns.countplot(y=df['Language'], color='deepskyblue')\n",
+    "mp.xlabel('Number of People')\n",
+    "mp.ylabel('Language')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "English is far and away the most common language spoken by these paticular users. Portuguese was the second most common language, which is not so surprising considering the very large Brazilian MMA fanbase that closely follows UFC events. It's nice to see that the viewership is quite geographically extensive, reaching many foreign countries located in several different time zones. It's worth noting that the Diaz McGregor fight began aroung 9:45 pm (Mountain time) on a Saturday night. This means that users in western Europe were watching at around 5:45 am on Sunday morning. That's some serious dedicaiton!\n",
+    "\n",
+    "# Tweets by Location\n",
+    "We can get a better feel for which countries these users were tweeting from by looking at their actual geographic location. Lucky for us, many Twitter users have made public the city, state, and/or country in which they live, and these tags are included in the tweets. It's fair to say that the location information, in its raw form, is very messy. For example, a subset of raw entries looks something like this:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid syntax (<ipython-input-54-991dd8709329>, line 1)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-54-991dd8709329>\"\u001b[0;36m, line \u001b[0;32m1\u001b[0m\n\u001b[0;31m    0                         UK/Ireland\u001b[0m\n\u001b[0m                               ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+     ]
+    }
+   ],
+   "source": [
+    "0                         UK/Ireland\n",
+    "1                        El Salvador\n",
+    "2                                18x\n",
+    "3                      United States\n",
+    "4                Gloucester, England\n",
+    "5                           Miami,FL\n",
+    "6                       milwaukee,wi\n",
+    "7     Colorado via McKees Rocks, PA \n",
+    "8                         Everywhere\n",
+    "9     every mirror you're staring at\n",
+    "10                  Philadelphia, PA\n",
+    "11                       Philippines\n",
+    "12                 Moreno Valley, CA\n",
+    "13            My conscience : Me too"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "I still have no idea why someone would enter their location as \"18x\", or as \"My conscience : Me too\", but there we are. Many locations are entered, in order, as (city, country), (city, state), (state, country), only city, only state, or only country. Ideally, I would like to quickly scan through the various locations and extract the corresponding latitude and longitude locations wherever a (city, country) or (city, state) combination is present. Luckily, there is an amazing Python library called geopy which is capable of extracting the coordinates from this kind of messy data. I first split the location column by comma, and keep only those entries where the number of separate strings is equal to 2. The idea here is that any location that is correctly formatted as (city, country) or (city, state) will only have two entries. Then, for each remaining entry in the dataframe, we loop over location, extract the coordinates when possible, and place them in a dataframe called df_world."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [],
+   "source": [
+    "df['nLocation'] = df.loc[df.Location.notnull(), 'Location'].apply(lambda x: x.split(','))\n",
+    "\n",
+    "new = []\n",
+    "for i in range(0,df.shape[0]):\n",
+    "    try:\n",
+    "        tmp = len(df.nLocation[i])\n",
+    "        new.append(tmp)\n",
+    "    except:\n",
+    "        tmp = np.nan\n",
+    "        new.append(tmp)\n",
+    "\n",
+    "df['tmp'] = new\n",
+    "df['city_country'] = np.where(df['tmp']==2,df['Location'], np.nan)\n",
+    "\n",
+    "df = df.dropna(subset=['city_country']).reset_index(drop=True)\n",
+    "\n",
+    "Lat = []\n",
+    "Lon = []\n",
+    "for i in range(0,df.shape[0]):\n",
+    "    try:\n",
+    "        results = Geocoder.geocode(df.city_country[i])\n",
+    "        tmp_lat = results.coordinates[0]\n",
+    "        tmp_lon = results.coordinates[1]\n",
+    "        Lat.append(tmp_lat)\n",
+    "        Lon.append(tmp_lon)\n",
+    "    except:\n",
+    "        tmp_lat = np.nan\n",
+    "        tmp_lon = np.nan\n",
+    "        Lat.append(tmp_lat)\n",
+    "        Lon.append(tmp_lon)\n",
+    "\n",
+    "df_world = df.copy()\n",
+    "df_world['lat'] = Lat\n",
+    "df_world['lon'] = Lon\n",
+    "df_world = df_world.dropna(subset=['lat']).reset_index(drop=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This process leaves us with 3,576 (1,690 unique) correctly formatted (city, country) pairs, along with their corresponding latitude, longitude positions. We can now use the Basemap package to visualize the spatial distribution of these points."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "mp.figure(figsize=(12,9))\n",
+    "eq_map = Basemap(projection='robin', resolution = 'h', area_thresh = 1000.0, lat_0=0, lon_0=0)\n",
+    "eq_map.drawcoastlines()\n",
+    "eq_map.drawcountries()\n",
+    "eq_map.fillcontinents(color = 'gray')\n",
+    "eq_map.drawmapboundary()\n",
+    "eq_map.drawmeridians(np.arange(0, 360, 30))\n",
+    "eq_map.drawparallels(np.arange(-90, 90, 30))\n",
+    "\n",
+    "for lon, lat in zip(df_world.lon, df_world.lat):\n",
+    "    x,y = eq_map(lon, lat)\n",
+    "    eq_map.plot(x, y, 'oy', markersize=6)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We see that the bulk of the users are located in the United States, with other heavy concentrations throughout Latin America, South America, and Europe. Let's now zoom in on the United States and immediate surrounding regions."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "mp.figure(figsize=(12,9))\n",
+    "eq_map = Basemap(llcrnrlon=-119, llcrnrlat=22, urcrnrlon=-64, urcrnrlat=49, projection='lcc', lat_1=33, lat_2=45, lon_0=-95, resolution='h', area_thresh=10000)\n",
+    "eq_map.drawcoastlines()\n",
+    "eq_map.drawcountries()\n",
+    "eq_map.fillcontinents(color = 'gray')\n",
+    "eq_map.drawmapboundary()\n",
+    "eq_map.drawstates()\n",
+    "\n",
+    "for lon, lat in zip(df_world.lon, df_world.lat):\n",
+    "    x,y = eq_map(lon, lat)\n",
+    "    eq_map.plot(x, y, 'oy', markersize=6)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "I'm glad to see my home state of Michigan representing! In fact, several tweets came from a small town called Gladstone, located about ten miles away from the city I grew up in. There were tweets sent from every single U.S. state including Alaska and Hawaii (not shown here). Remember, there were close to 12,500 other users with badly-formatted locations which are not plotted in these figures, but this is still interesting to see. Remember, all of this was happening in only a 15 minute time interval!\n",
+    "\n",
+    "Tweet Frequency\n",
+    "Okay, now let's take a quick look at tweet frequency. For this we will need to look at the time stamp for each tweet. The time stamp available in the dataframe is initially in string format, so we first convert it to an integer. The values are given in milliseconds, so a division by 1,000 will put them in seconds. I then subtract the smallest time value from the entire column, and sort in ascending order. As there are several tweets per second, the plot may be a bit noisy looking. To smooth it out a little, we can bin the tweets in ten second intervals. The figure below shows the resulting tweet frequency as a function of time leading up to the main event (hence the negative time values). Time zero represents the start of the fight."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "df = tweets.copy()\n",
+    "\n",
+    "df['nTstamp'] = df['Tstamp'].astype(int)\n",
+    "df['nTstamp'] = df['nTstamp']/1000\n",
+    "df['nTstamp'] = df['nTstamp'] - df['nTstamp'].min()\n",
+    "\n",
+    "df = df.sort_values(['nTstamp'], ascending=True).reset_index(drop=True)\n",
+    "\n",
+    "L = []\n",
+    "trange =np.arange(0,900,10)\n",
+    "for i in trange:\n",
+    "    tmp = df.loc[(df.nTstamp>=[i]) & (df.nTstamp<[i+10]),'Tstamp']\n",
+    "    num = len(tmp)\n",
+    "    L.append(num)\n",
+    "\n",
+    "x = trange + 5\n",
+    "plt.plot(x-900, L)\n",
+    "plt.xlabel('Time [seconds]')\n",
+    "plt.ylabel('Number of Tweets per 10 Second Interval')\n",
+    "plt.ylim([0,350])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The tweet rate is quite high for all times shown here (about 18 tweets per second on average), peaking about six minutes before the main event with tweets being sent at a rate of about 32 per second. We see that there are several distinct peaks visible, corresponding to exciting points during the co-main event between Anothony Johnson and Glover Teixeira. The highest peak corresponds to the point in time immediately after Johnson knocked out Teixeira, only 13 seconds into the fight.\n",
+    "\n",
+    "# Common Tweet Terms\n",
+    "Lastly, let's take a look at tweet content. A simple and effective way of quickly looking at common words used by users in their tweets is to use a word cloud. There is a nice package in Python aptly called wordcloud that we will use. I was able to find a well-written article by Sebastian Raschka illustrating the use of this library which can be found [here](http://sebastianraschka.com/Articles/2014_twitter_wordcloud.html).\n",
+    "\n",
+    "To create the word cloud, we first join all tweets into a single string. We don't want our word cloud to contain things like retweet abbreviations (RT's), links, and twitter handles, so we can eliminate those. The word cloud is then generated, showing only the top 100 most commonly used terms."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "words = ' '.join(df['Text'])\n",
+    "notags = \" \".join([word for word in words.split()\n",
+    "                            if 'http' not in word\n",
+    "                                and not word.startswith('@')\n",
+    "                                and word != 'RT'\n",
+    "                            ])\n",
+    "\n",
+    "wordcloud = WordCloud(stopwords=STOPWORDS,max_words=100, background_color='black').generate(notags)\n",
+    "mp.figure(figsize=(12,9))\n",
+    "mp.imshow(wordcloud)\n",
+    "mp.axis('off')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "As one may expect, some of the most commonly used terms were \"UFC\" and \"UFC 202\", with the names of Diaz, McGregor, and Johnson also very prevalent.\n",
+    "\n",
+    "Let's do one final simple comparison were we try and identify the number of supportive tweets sent for fighters Diaz and McGregor. We can assume that a tweet sent by a user in support of a particular fighter may contain only the mention of that fighter's name, Twitter handle, or hashtag, and no others. So let's identify the number of tweets sent where \"Nate Diaz\", \"NateDiaz209\", \"#NateDiaz\", and \"#TeamDiaz\" were included, with no mention of McGregor. We will then look for instances where McGregor is mentioned, with no reference to Diaz."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "x = [0,1]\n",
+    "y = [2717,2834]\n",
+    "ypos = [0,1]\n",
+    "objects = ('Diaz','McGregor')\n",
+    "plt.barh(x, y, align='center', color='deepskyblue')\n",
+    "plt.yticks(ypos,objects)\n",
+    "plt.xlabel('Number of Tweets Containing Fighter Name')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "diaz_tweets = df[(df.Text.str.contains('NateDiaz209|#NateDiaz|#TeamDiaz')) & (~df.Text.str.contains('TheNotoriousMMA|#ConorMcGregor|#TeamMcGregor'))].shape[0]\n",
+    "mcgr_tweets = df[(df.Text.str.contains('TheNotoriousMMA|#ConorMcGregor|#TeamMcGregor')) & (~df.Text.str.contains('NateDiaz209|#NateDiaz|#TeamDiaz'))].shape[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Before separating the fighters, Diaz and Mcgregor were mentioned almost the same number of times (2717 for Diaz, 2834 for McGregor). After separation, I was able to clearly identify 217 and 372 instances of Diaz and McGregor support, respectively. Interestingly, these values account for 37% and 63% of the 589 tweets, which is almost identical to the 35/65 split identified in UFC's own pre-fight poll of fight fans around the world.\n",
+    "\n",
+    "# A Video of Worldwide Tweets\n",
+    "As a last aside, I thought it would be interesting to create a short video showing the locations of our Twitter users as they sent out tweets in near real time. To do this, we invoke the animation library from matplotlib to animate a series of Basemap images like the ones shown in the earlier section Looking at Languages. The script is a simple function which loops through the latitude and longitude positions of each user (where available), and plots a single point on our map. These images are collected by animation.FuncAnimation(), and saved in mp4 format. For brevity, I loop over only the first 500 points."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(12,9))\n",
+    "eq_map = Basemap(projection='robin', resolution = 'l', area_thresh = 1000.0, lat_0=0, lon_0=-130)\n",
+    "eq_map.drawcoastlines()\n",
+    "eq_map.drawcountries()\n",
+    "eq_map.fillcontinents(color = 'gray')\n",
+    "eq_map.drawmapboundary()\n",
+    "eq_map.drawmeridians(np.arange(0, 360, 30))\n",
+    "eq_map.drawparallels(np.arange(-90, 90, 30))\n",
+    "\n",
+    "x,y = eq_map(0, 0)\n",
+    "point = eq_map.plot(x, y, 'oy', markersize=12)[0]\n",
+    "\n",
+    "def init():\n",
+    "    point.set_data([], [])\n",
+    "    return point,\n",
+    "\n",
+    "# Animate the figures\n",
+    "def animate(i):\n",
+    "    print(i)\n",
+    "    lon = dfn.lon[i]\n",
+    "    lat = dfn.lat[i]\n",
+    "    x, y = eq_map(lon,lat)\n",
+    "    point.set_data(x, y)\n",
+    "    return point,\n",
+    "\n",
+    "anim = animation.FuncAnimation(plt.gcf(), animate, frames=dfn.shape[0], init_func=init, interval=56, blit=True)\n",
+    "\n",
+    "mywriter = animation.FFMpegWriter()\n",
+    "anim.save('mymovie.mp4',writer=mywriter)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The animation plots approximately five points every second, which is still actually about 3 - 6 times slower than the real-time rates we found in the Tweet Frequency section earlier. It really makes me wonder what kind of tweet rates were seen during, for example, the Olympic opening ceremony a few weeks ago. It must have been off the charts!\n",
+    "\n",
+    "# Concluding Remarks\n",
+    "In this project we examined the tweeting habits of fight fans around the world during UFC 202: Diaz vs. McGregor. Over 16,000 tweets were collected using an application programming interface (API) in the 15 minutes leading up to the main event. We found that the majority of tweeters were based in the United States, but significant fanbases are also prevalent in Latin America, South America, and Europe, along with a healthy smattering throughout the Middle East, India, the Philippines, and Australia. This is refreshing to see, as I am also a fight fan, and I know the UFC has been pushing its global brand very hard over the last decade or so. These users are far and away primarily English speakers, with other less-represented languages reflecting the countries mentioned above (i.e. Spanish, Portuguese, etc.).\n",
+    "\n",
+    "In terms of tweet frequency, rates averaged about 18 tweets per second, maxing out at nearly twice this value. Rates varied significantly over the short time that the API was collecting tweets, and showed several prominent peaks, the largest of which ocurred 6 minutes before the start of the main event, and corresponding to a stunning knockout finish by Anothony Johnson. Of the two main event fighters, McGregor was mentioned (in isolation) almost twice as often as Diaz, closely reflecting UFC fight fan poll numbers aquired before the bout."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda root]",
+   "language": "python",
+   "name": "conda-root-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.5.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}
