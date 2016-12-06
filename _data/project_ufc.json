@@ -540,7 +540,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The animation plots approximately five points every second, which is still actually about 3 - 6 times slower than the real-time rates we found in the Tweet Frequency section earlier. It really makes me wonder what kind of tweet rates were seen during, for example, the Olympic opening ceremony a few weeks ago. It must have been off the charts!\n",
+    "The animation plots approximately five points every second, which is still actually about 5 times slower than the real-time rates we found in the Tweet Frequency section earlier. It really makes me wonder what kind of tweet rates were seen during, for example, the Olympic opening ceremony a few weeks ago. It must have been off the charts!\n",
     "\n",
     "# Concluding Remarks\n",
     "In this project we examined the tweeting habits of fight fans around the world during UFC 202: Diaz vs. McGregor. Over 16,000 tweets were collected using an application programming interface (API) in the 15 minutes leading up to the main event. We found that the majority of tweeters were based in the United States, but significant fanbases are also prevalent in Latin America, South America, and Europe, along with a healthy smattering throughout the Middle East, India, the Philippines, and Australia. This is refreshing to see, as I am also a fight fan, and I know the UFC has been pushing its global brand very hard over the last decade or so. These users are far and away primarily English speakers, with other less-represented languages reflecting the countries mentioned above (i.e. Spanish, Portuguese, etc.).\n",
