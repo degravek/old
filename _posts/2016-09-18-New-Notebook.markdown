@@ -6,6 +6,6 @@ tags: 		  jupyter workflows template
 #subtitle:   Predicting Survival Rates on Titanic
 category:   project1
 
-#notebookfilename: project_ufc
+notebookfilename: project_ufc
 #visualworkflow: true
 ---
