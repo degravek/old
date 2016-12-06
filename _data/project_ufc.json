@@ -28,6 +28,7 @@
    "source": [
     "from mpl_toolkits.basemap import Basemap\n",
     "from wordcloud import WordCloud, STOPWORDS\n",
+    "from matplotlib import animation\n",
     "from pygeocoder import Geocoder\n",
     "import seaborn as sns\n",
     "import pandas as pd\n",
@@ -451,7 +452,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 93,
+   "execution_count": 125,
    "metadata": {
     "collapsed": false
    },
@@ -463,16 +464,16 @@
      "traceback": [
       "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
       "\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
-      "\u001b[0;32m<ipython-input-93-9e6fa17c5c06>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0mmp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfigure\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfigsize\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m12\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;36m9\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0meq_map\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mBasemap\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprojection\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'robin'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresolution\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'l'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0marea_thresh\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;36m1000.0\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlat_0\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlon_0\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m130\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdrawcoastlines\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdrawcountries\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfillcontinents\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcolor\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'gray'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m<ipython-input-125-42353fa99403>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0mmp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfigure\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mfigsize\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m12\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;36m9\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0meq_map\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mBasemap\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mprojection\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'robin'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mresolution\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'l'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0marea_thresh\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;36m1000.0\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlat_0\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlon_0\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m-\u001b[0m\u001b[0;36m130\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdrawcoastlines\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdrawcountries\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0meq_map\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfillcontinents\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcolor\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'gray'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
       "\u001b[0;32m/Users/degravek/anaconda/lib/python3.5/site-packages/mpl_toolkits/basemap/__init__.py\u001b[0m in \u001b[0;36m__init__\u001b[0;34m(self, llcrnrlon, llcrnrlat, urcrnrlon, urcrnrlat, llcrnrx, llcrnry, urcrnrx, urcrnry, width, height, projection, resolution, area_thresh, rsphere, ellps, lat_ts, lat_1, lat_2, lat_0, lon_0, lon_1, lon_2, o_lon_p, o_lat_p, k_0, no_rot, suppress_ticks, satellite_height, boundinglat, fix_aspect, anchor, celestial, round, epsg, ax)\u001b[0m\n\u001b[1;32m   1085\u001b[0m             \u001b[0;31m# replace coastsegs with line segments (instead of polygons)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1086\u001b[0m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcoastsegs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtypes\u001b[0m \u001b[0;34m=\u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1087\u001b[0;31m             \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_readboundarydata\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'gshhs'\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0mas_polygons\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mFalse\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1088\u001b[0m         \u001b[0;31m# create geos Polygon structures for land areas.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1089\u001b[0m         \u001b[0;31m# currently only used in is_land method.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;32m/Users/degravek/anaconda/lib/python3.5/site-packages/mpl_toolkits/basemap/__init__.py\u001b[0m in \u001b[0;36m_readboundarydata\u001b[0;34m(self, name, as_polygons)\u001b[0m\n\u001b[1;32m   1351\u001b[0m                             \u001b[0;31m# if polygon instersects map projection\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1352\u001b[0m                             \u001b[0;31m# region, process it.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1353\u001b[0;31m                             \u001b[0;32mif\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mintersects\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mboundarypolyll\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1354\u001b[0m                                 \u001b[0;32mif\u001b[0m \u001b[0mname\u001b[0m \u001b[0;34m!=\u001b[0m \u001b[0;34m'gshhs'\u001b[0m \u001b[0;32mor\u001b[0m \u001b[0mas_polygons\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1355\u001b[0m                                     \u001b[0mgeoms\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mintersection\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mboundarypolyll\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m/Users/degravek/anaconda/lib/python3.5/site-packages/mpl_toolkits/basemap/__init__.py\u001b[0m in \u001b[0;36m_readboundarydata\u001b[0;34m(self, name, as_polygons)\u001b[0m\n\u001b[1;32m   1287\u001b[0m                     \u001b[0mpoly\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mShape\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mb\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1288\u001b[0m                     \u001b[0mpoly\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0munion\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpolyE\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1289\u001b[0;31m                     \u001b[0;32mif\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mis_valid\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfix\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1290\u001b[0m                     \u001b[0mb\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mpoly\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mboundary\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1291\u001b[0m                     \u001b[0mb2\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mb\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcopy\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
       "\u001b[0;31mKeyboardInterrupt\u001b[0m: "
      ]
     },
     {
      "data": {
       "text/plain": [
-       "<matplotlib.figure.Figure at 0x1b00eea58>"
+       "<matplotlib.figure.Figure at 0x1b04992b0>"
       ]
      },
      "metadata": {},
@@ -499,42 +500,23 @@
     "# Animate the figures\n",
     "def animate(i):\n",
     "    print(i)\n",
-    "    lon = dfn.lon[i]\n",
-    "    lat = dfn.lat[i]\n",
-    "    x, y = eq_map(lon,lat)\n",
+    "    lon = df_world.lon[i]\n",
+    "    lat = df_world.lat[i]\n",
+    "    x, y = eq_map(lon, lat)\n",
     "    point.set_data(x, y)\n",
     "    return point,\n",
     "\n",
-    "anim = animation.FuncAnimation(plt.gcf(), animate, frames=dfn.shape[0], init_func=init, interval=56, blit=True)\n",
+    "anim = animation.FuncAnimation(mp.gcf(), animate, frames=df_world.shape[0], init_func=init, interval=56, blit=True)\n",
     "\n",
     "mywriter = animation.FFMpegWriter()\n",
     "anim.save('mymovie.mp4', writer=mywriter)"
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 105,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/html": [
-       "<img src=\"/Users/degravek/Downloads/mymovie.gif\"/>"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Image object>"
-      ]
-     },
-     "execution_count": 105,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
-    "from IPython.display import Image\n",
-    "Image(url='/Users/degravek/Downloads/mymovie.gif')   "
+    "<video src=\"/img/mymovie.mp4\" width=\"580\" height=\"435\" controls></video>"
    ]
   },
   {
