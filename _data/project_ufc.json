@@ -516,7 +516,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "<video src=\"/img/mymovie.mp4\" width=\"580\" height=\"435\" controls></video>"
+    "from IPython.display import HTML\n",
+    "\n",
+    "<video width=\"320\" height=\"240\" controls>\n",
+    "  <source src=\"/Users/degravek/Site/ufc/mymovie.mp4\" type=\"video/mp4\">\n",
+    "</video>"
    ]
   },
   {
@@ -530,6 +534,15 @@
     "\n",
     "In terms of tweet frequency, rates averaged about 18 tweets per second, maxing out at nearly twice this value. Rates varied significantly over the short time that the API was collecting tweets, and showed several prominent peaks, the largest of which ocurred 6 minutes before the start of the main event, and corresponding to a stunning knockout finish by Anothony Johnson. Of the two main event fighters, McGregor was mentioned (in isolation) almost twice as often as Diaz, closely reflecting UFC fight fan poll numbers aquired before the bout."
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
   }
  ],
  "metadata": {
