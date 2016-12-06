@@ -11,6 +11,7 @@ category:   project1
 ---
 
 
+
 # Introduction
 The Ultimate Fighting Championchip (UFC) is a premier mixed martial arts (MMA) organization founded in 1993, and headquartered in the United States. The organization contains over 500 of the worlds top fighters who continually pit themselves against one another for a shot at winning the championchip belt in their respective weight class. To date, the UFC has held over 300 televised events, taking place about once every month on average at various locations around the world.
 
@@ -110,7 +111,7 @@ We can get a better feel for which countries these users were tweeting from by l
 ```
 
 
-      File "<ipython-input-54-991dd8709329>", line 1
+      File "<ipython-input-153-991dd8709329>", line 1
         0                         UK/Ireland
                                    ^
     SyntaxError: invalid syntax
@@ -375,13 +376,13 @@ anim.save('mymovie.mp4', writer=mywriter)
 ```python
 %%HTML
 <video width="320" height="240" controls>
-  <source src="http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
+  <source src="/Users/degravek/Site/ufc/short.mp4" type="video/mp4">
 </video>
 ```
 
 
 <video width="320" height="240" controls>
-  <source src="http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4" type="video/mp4">
+  <source src="/Users/degravek/Site/ufc/short.mp4" type="video/mp4">
 </video>
 
 
