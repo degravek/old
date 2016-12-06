@@ -80,6 +80,13 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Let's plot the distribution of languages spoken."
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": 53,
    "metadata": {
@@ -411,7 +418,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 156,
+   "execution_count": 202,
    "metadata": {
     "collapsed": false
    },
@@ -419,12 +426,22 @@
     {
      "data": {
       "text/plain": [
-       "293"
+       "<matplotlib.text.Text at 0x1b1eb9978>"
       ]
      },
-     "execution_count": 156,
+     "execution_count": 202,
      "metadata": {},
      "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAjcAAAF2CAYAAACSxLn6AAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\nAAAPYQAAD2EBqD+naQAAIABJREFUeJzt3Xu8XFV99/FPcvIEEIyiPgJaJdrCDwgUIgoKgkjxVq2i\n9QbWahG8gICgSFEQhUorl4CCQEWBWtSqoIDoIzetAUSFKiCh/rglXKSAaCAQQjXJef5Ye8gwmXPl\nnMw563zer9d5nTl779l7zTprZn9nrbVnpvX39yNJklSL6b0ugCRJ0lgy3EiSpKoYbiRJUlUMN5Ik\nqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqjKj1wWowbR/PLuf2XN6XQxJknpv0QIu3nU2c+duO+Sm\n06dP45nPXG/aWBfBcDMWZs+BzV7S61JIkjRBLB3WVtOnj3muKfsdl71KkiT1iOFGkiRVxXAjSZKq\nYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiS\npKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3\nkiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQV\nw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIk\nVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriR\nJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKrM\nGMnGEbES6Ac2zsy7O9Z9EDgV+HRmHjXM/b0Z2B/YGlgbuBE4LTPPHkm5JEmSWkbTc/Mn4I1dlu8O\nrBzuTiLicOAbwKXAy4A5wFeAEyPi4FGUS5IkaWQ9N435lHBzamtBRDyVElB+NZwdRMRWwJHAHpl5\nbtuqL0XEUuDzEXFSZg47LEmSJMHows0FwPERsV5mPtIsez0l9KzbvmHTA7M/8CzgKuCDmbkIeA9w\nU0ewafkm8ONWsGmGwo4G9gWuyszdI2InYB6lt+cW4DOZ+Z224x4EfBRYD/g3YCvg7Mz8akSsBRwF\n7AE8A7gc2C8z746IjYGFwKeAg4FzMvOAUdSRJEnqkdEMS/0a+C3w2rZlbwbOB6a1FkTEB4AjgEOA\nbYAlwLea1S8Fruy288xcnpn3dCx+A6Vn6B8jYgPge8CZwJbA54CzImLH5rjvovQKHdDcZzawc9u+\n/pUyhPZ3TTn+DyWwtdsB2Bb4/IC1IEmSJqTR9NwAXEgZmjo3ImYCrwL2owSGlvcD81q9MxHxYeCj\nEbE2pSfnD+07jIhbgQ3aFr02M69qbp+embc22x0FXJqZpzXrbo+IFwEfofQO7Quc2OrJiYj3AHc3\nt5/elPE1mTm/WfYu4K6IeBVwc7PPEzNz4SjrRpKkKa2vbzozZgzdf9LXNz4XbY823FxACTbTgd2A\nX2fmAxHRvk0Av2z9kZn3A4cCRMRi4Okd+9y1rTy3An1t6+5ou7058MaIeLjjcWRz+y+BY9qO+2BE\ntNZtSuld+kXb+sXN+s1ZFW7ajydJkkZg1qx1WH/9dYfecJyMNty0hpReDrwJ+G6Xbf40yP1/DuzU\nviAz72zd7ghJAI+13Z4B/DvwWdqGwdqOt7xjOW1/P0Z3fTwxTA20nSRJGsKSJctYvHjpkNv19U1n\n1qx1xvz4o+oPyswVwPcpweYNdA83t1A+vwaAiHhmRNwfEc+nXPK9ZUT8TeedIuK5Qx0e2CQzF2bm\n7Zl5O2XOz7ua9Qso82Va+5sF/EXz523ACspcm8fLBWwC/KZZ1D/E8SVJ0iBWrFjJ8uVD/6xYMT4X\nRY+25wbKvJuzgNsys9swzhcon1lzIyU4fLbZ9k6AiDgM+EZE/DNlMvJjwGsok5DvBBYNcNxTgf0j\n4mjKlVDbNft+b7P+ZOD0iLgB+G/KlVbrAv2ZuTQizgBOiYj3A4spE5LvAC4DnsPqvT6SJGkSGWnP\nTXuvxsWUcPTdbusz8xzgeEoYuRaYCbytbf08yqTklwE/Am6gTEI+GdiqbZjqCT0pzfK/AV5HuXLr\nKOCgzPyPZv03geOA04GfUS7tvgP4Y7OLj1E+OPBc4ApgKfCqzGwNa9lzI0nSJDatv7+uc3lE7Azc\n3vp6iIjoAx4A3tS6QmqsTTv9mn42e8l47FqSpMnlN9dw8QuXMnfutkNuOmPGdNZff90xHzF5MsNS\nE9XuwA7Nd109AhwIPETpxZEkSZWr8VvBj6DM8bmE8nUQm1I+M+ePg95LkiRVobqem8xcyqrJxZIk\naYqpsedGkiRNYYYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkq\nhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJ\nqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAj\nSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx\n3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElS\nVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJ\nklQVw40kSarKjF4XoAqLFvS6BJIkTQyLFsALZ/e0CNP6+/t7WoAaXHPNNf1LlixjxYqVvS7KpNHX\nN51Zs9bBehs+62x0rLeRs85Gx3pbZc6crZg5c+aQ282YMZ3111932lgf33AzNvoXL17K8uVTuzGP\nRNOgsd6GzzobHett5Kyz0bHeRm68wo1zbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mS\nqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxI\nkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUM\nN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqszodQFqcM0117BkyTJWrFjZ\n66JMGn1905k1ax3rbQSss9GZDPU2Z85WzJw5s9fFkKphuBkD2523AGbP6XUxJql1el2AScg6G50J\nWm+LFnAxMHfutr0uiVQNw81YmD0HNntJr0shadJa2usCSFVxzo0kSaqK4UaSJFXFcCNJkqpiuJEk\nSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhu\nJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkq\nhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJ\nqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAj\nSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx\n3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVZnR6wKMRkQsAp7f\n/NkPPApcDxyVmZc026wEdsnM+b0ooyRJ6o3J2nPTDxwAbAg8F9geuAr4fkTs2myzIfDT3hRPkiT1\nyqTsuWksycz7m9v3AodGxEbAicDWbeskSdIUMpnDTTdfAn4SEX8O3EIzLBURzwG+AOwKPAVYAHw4\nM6+OiCOBIym9QQDTmt/vycx/X7PFlyRJT9ZkHZYayE3N7y1YFVYAzqGElu2BbYC7gNOadcdRhrA2\nan5OBW4Fzl8D5ZUkSWOstp6bhygh5qms6oEB+C5wXmbeAxARpwEXAWTmo5QJyUTE64D3Ajtk5sNr\nrtiSprK+vunMmDFx3mv29U1/wm8Nj/U2cuNVV7WFm1mUHpuHOpafDrwzInYANgO2paPXKiJmA/8O\nfCQzbxj/okpSMWvWOqy//rq9LsZqZs1ap9dFmJSst96rLdxs3fy+sbUgIqYBl1GCzzeBC4G1gPPa\ntmn9/f3M/PIaK60kAUuWLGPx4qW9Lsbj+vqmM2vWOixZsowVK1b2ujiThvU2cq06G2u1hZu9gGsz\n846IaC3bAtgJeFZm/gEgIvbtuN8XKYHnA2uqoJLUsmLFSpYvn3gnw4laronOeuu9yRxunhYRG1Dm\n1jwL2Bt4O7Bbx3YPAiuAPSPiQmA74NMAETETeDfwjuZ+syLiac39lmXmkvF+EJIkaWxN5llPJwH3\nAHcDlwKbAK/MzCub9f0Amflb4EPAxynDVYcC+wPLgbnA31EuD/8p8D/NPu9p9i9JkiaZSdlzk5kv\nGMY2fW23vwx0zqX5ZvP7lWNYNEmS1GOTuedGkiRpNYYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriR\nJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoY\nbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVwI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSp\nKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40k\nSaqK4UaSJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqorhRpIkVcVw\nI0mSqmK4kSRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcONJEmqiuFGkiRVxXAjSZKqYriRJElV\nMdxIkqSqGG4kSVJVDDeSJKkqhhtJklQVw40kSaqK4UaSJFXFcCNJkqpiuJEkSVWZ0esCVGHRgl6X\nQNJktWgBvHB2r0shVWVaf39/r8sgSZI0ZhyWkiRJVTHcSJKkqhhuJElSVQw3kiSpKoYbSZJUFcON\nJEmqiuFGkiRVxXAjSZKqYriRJElVMdxIkqSq+N1ST0JErAWcCrwFeBQ4ITPn9bZUE09E7A58B+gH\npjW/z8vMt0fEbOAM4GXAIuCgzLy0R0XtuaZNXQvsl5nzm2WzGaSOImI34ETghcDVwD6ZuXDNlry3\nBqi3zwP788R2t39mntqsn5L1FhHPAb4AvJLyuvUt4LDM/KNtbWBD1JttrYuI+HPgi8COwO+BUzLz\n+GbdbMaxrdlz8+QcD7wI2AXYFzgyIt7S0xJNTFsAFwIbNj8bAXs36y4A7gG2Bc4BvhsRf9aLQvZa\nc4L+BqW+2p3PAHUUEc8Dvgt8BXgx8ECz/ZQxSL1tDhxKaW+tdndmc5+pXG/nAWtTTjjvBP4GOLpZ\nN+DzcYrXGQxeb7a1DhExDfg+cB+wDfBB4PCIeGezybi2NXtuRikingK8D3hNZl4PXB8RxwIfpvRS\naJXNgRsz83ftCyNiV+AFwPaZ+RjwLxHxV8BewFFrvpi9ExGbA1/vsnxXyjuXlw5QR/sA12TmSc32\n/wDcGxE7t3owajZQvTU2B47NzPu7rNubKVhvERHAdsAGmflAs+xTwHER8UMGfz5O2bY2WL1RQo1t\nbXUbAL8C9s3MpcBtEXE58PKIuI9xbmv23Ize1pRweHXbsiuB7XtTnAltC+DmLsu3B37ZNO6WKynd\nlFPNK4DLKY99Wtvyoepoe+DxJ3tmLgN+ydSpw671FhFPBZ5L93YH8FKmZr3dC7y2dYJu8zRKndjW\nuutWb9OAp9nWusvMezNzjybYEBE7AjsB/8kaaGv23IzeRsADmbm8bdl9wNoR8czM/H2PyjURBfDa\niPgk0Ad8G/gUpQ7v6dj2PmDKDUtl5umt2+VN4uOGqqMpXYeD1NvmlHkPh0fE6yjj/fMy86vN+ilZ\nb5n5ENA+r2Eapbf5cmxrAxqk3i7DtjakiFgEPA+4iDKycRLj3NbsuRm9pwD/27Gs9fdaa7gsE1ZE\nPB9YB1gGvA34KLAnpTt3oDq0/lYZqo6sw+42A1YCNwGvA74MfCki3tSst96K44C5wCexrY3EcZR5\nJIdjWxuOt1DmKG1DmSQ87m3NnpvRe4zVK7r196NruCwTVmbe2fRkPdgsuiEi+igTyM4C1u+4y1pY\nf+0eA57Rsay9jgZqh4vHuVwTWmZ+NSIubGt3N0bEpsCHKBMZp3y9RcTngAOAt2fmTRFhWxuGznoD\nbrKtDS4zfwkQEQcDX6NMFB7stf9J15k9N6P3W+BZEdFehxsCy9oauYAu9fHflKsO7qXUWbsNgf9Z\nE+WaJH7L4HU01Popa4B299zm9pSut4g4GTgIeFdmtq5Csa0NYYB6s611ERHPbuu9arkJmEl57OPa\n1gw3o3cd8CfKxKiWnYBrelOciSkiXh0RD0TE2m2L51Iu7bsC2La5lLfl5cDP1mQZJ7ifAS8apI5+\n1vwNPH4V31ymeB1GxGciovPzkuYCv2luT9l6i4gjgfcD78jMb7etsq0NYqB6s60N6AXAdyJio7Zl\nLwbup0weHuy1/0nX2bT+/v5RllsRcRrlMw/2okx0Oht4T2Ze0MtyTSQRsR4lrc+nXOL355QPbjqx\n+bkB+DXl8yLeCBwGzMnMu3tS4AkgIlYCu2Tm/KZn8HrgRrrUUURsTKnfz1Am6x0JbJKZL+pN6Xun\no95eDFxFqavzgdcAJzTrfzFV6625dP4G4BjKB5C2+x22ta6GqLfnYVtbTfPadTXwB+BgStj5CvBZ\nSh0O+No/FnVmz82TczDwX8CPgJOBIww2T5SZj1Ce7P+X0qt1BnB6Zp6QmSspjXpDyqfL7gnsPpWD\nTePxdxxNHb2JAeooM++gTNbbC/gF8HTgzWu6wBNEe71dC7wV+HvKC+iHgT0y8xfN+qlab2+kvO4f\nTrka5R5KV/89TVvbHdtaN4PVm22ti7bXrqXAT4EvASdl5ilDvfaPRZ3ZcyNJkqpiz40kSaqK4UaS\nJFXFcCNJkqpiuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqsqMXhdA6iYiFgErga0y\nc2nHurOAjTNz13E8/kLgrMw8aryOMYKybAucA8wGTs7Mj7et2xhYSPnqgWld7t4PfKYXjyMidgCm\nZeZVT2IfTwE+Cryd8t00Syhfnnd0Zv5qTAq66lhbALMz8wfD3P5IynfJvXCY26+JdvufwM5dVvUD\nJ2TmxyPix8DCzNxrmPsc8rkQEa8HbsvM3wy0zUhFxCuAH1PKfUiX9SuB92bmV8fqmKqHPTeaqPqB\njYHjel2QCeATwGPA5sA/d6y7k/L9LBs1v08A7gI2aFt+/Bor6RNdSfmi1FGJiGdSvrvtrcARwFbA\nG4BlwJXNyW8sXUT51uLhOg54yQi2P4DyfTnjqR/4Jqv+/62fjShfQgjlO3oOHKsDRsTzge8Bzx6r\nfXb4SES8dJz2rUrZc6OJ7HbgAxFxbmb+qNeF6aH1gesyc1HniszsB+5v/R0RjwArMvN3a6544+Y0\nYCawXWY+3CxbCLwrIi6jfLPwnDE8XreerwFl5qPAoyPY/uGhtxoTywb7/2fmg2N8vOm0fWnpOFgE\nnBUR22Tm/47jcVQRw40msnOAHYEzI2JO5/BUS7fu6fZlzfDBy4H5wH7AU4CvA/9EOYHuSvmW3wM7\nhiSeExE/AF5J+Qbg4zPz1LZj7EDpSXkJ8DvKu9fDWiexpjv/XOCvKd+K/reZeUWX8r+e8m3DWwIP\nA98APpGZ/9vs4/nAtIj4e+AFmXnnsGuw7P/plAD09sw8v1l2IqUn4dmZ+ftm2bXAdzLzmIjYnNLj\ns3NTph8BH83M+9r2+3HgA5SegWzq5+vNupWUE95ZEbFLZu7VlP/jlN6c3wPfBg7NzD92KfOzKT0M\nBw8QCt4PrNO2/Z8B/wL8FfBUSq/RIZn562b9Wc2mD1C+vXm95jHtk5n3ttXzkU15d42ILSn/3x2B\ndYG7gS9m5rxmn5+mDEu9oG148K3NY9yG0maOycwz2sqwcbPvXYBLKd+MfCywSXP/QzPzwmb76cBR\nwD8As4AfNmXYJjNf2aVOhqVzWCoiXt08zi2AW4B5wJmUIbpWW3tORJwHvIbSc/ZV4GNNnd1O+V//\nOCI+k5lHDdV+mjLcDGwNbArsl5nf6FLcfuBDwAXAMZQhyoEe197A/pS6XAn8EjgoM/+rWb+Q8nzf\nmfKcvh/4SHOMY4E/A64A3p2ZDzT3GfJ5oInJYSlNZP3A+yg9Fyc8yX3tDAQl5OxPOTn+ghIkXgT8\nN3BWx332Bn5CGQ6ZB3w+It4EEBF/STk5/YASSvZo9nNJxz72Az4MvJYyV+QJIuLNlBfuC4G5Tbne\n0ZQLyjDJzyhDDRtShpxGpHmnfhXwqrbFu1Hqd5emHBs1xz+/uT2fElheBLyecnK9OiLWabY/hhJs\n9mse/+eBUyPig83+N6L0hBwIHBgRWwFfogwvbUI5Yb+bcoLsZhvK69NPB3hMt2fmgqYs6zXbPYcy\nbPUySo/K/Ih4Xtvd9qC0pZ0o/49tKQEXSkD9LaWdvaV5nJdQQutLKSf+bwHHN/97mvrr7LGYBxwN\nbEYZ5jqtCT6d+oE+4HOU9jEHuBH4t2aeEc26fSgn920pYemALscctYjYpinnJcBfUurjhC7H2Isy\n/2UOcAhwEPAeyrDodpT/9Vso9TNk+2m8DziR8pz84SDFvBn4JKUd7TDA49gd+AIl4AblDcvawBkd\nmx5BeW5tCVxHCWmfAPZsyrkdcGizz+E+Dk1A9txoQsvMuyLiY8C/NsNTl41yV9OA9zdDCbdGxHHA\nZW09DacCr4+IDdrelX03Mz/X3D6lGff/KCWMHAJc3Lb+9oh4F3BbROycmfOb5T/IzB8PUq5DgfMy\nszWX5taI2JcSMjbLzN9ExB8ZYqhhGC4E9m0e60aUE8D3Ke9gz6P0Li3MzJsi4mjgrsw8uHXniHgn\n5UT/tog4l/KO952Z2TopLYyIFzSP5/TMvC8iAJZk5sMR8ULKu+k7MvNu4O6mx2DJAOV9RvN78TAe\n27ub7d+amX9oyrsncBslfP1js92DwAcycwVwc0T8B/A6gMx8ICJWAI9k5oMR8SzKifeLTZshIj7T\nPL6tgBsGKMsJmfn9ZvtPNsd/KXDHANt/MjN/0mx/NCUgbBURN1D+Xwe2enKAAwY6uXf4u4h4W8ey\n+Zn5+i7bHgRck5mHNX/fEhEbACd1bHduZp7S3D47Ij4CvDgzz46IVrtcnJmPRsRhDNJ+KIECylDr\nN4fxeKCE57+l9ARunZmPdaz/PfC+tt6fuyLiTODkju0uysyvNWU6g9Jz9onM/GWz7FJK8IFS/8N5\nHJqADDea8DLzjIh4K/DlpgdgNO5rnaQaSynd6S3Lmt9rtS3rvMrn55QQAKWX4y8ionPIpJ8y8bcV\nbm4ZolxbUYbI2v2kbd1YXX3yPcq76tmUnotrKeHmI836v6aENiiPbcsuj20tymPbgvKu+OsR0f4O\nvw+YGRFrdZkb8UNK78q1zfDAJcAFrZNKF60T5jN54v+pmy2Bm1vBBiAzH4uIX1DqsOW2Jti0PESZ\n07OaJuycRpnfMxf4C8oQSqvHZSCP/78yc0kT8Loeo9lX+//3IUoIn0mp57VZvbfviqYcg7mAMjTW\nPodo2QDbzmX13sb5XbbrbMeLaRsW7LLPgdrPZoPsc0CZ2R8R/wBcTxmeOrhj/RURsVlEHN4cYxNK\nT1Tn6MStbbdbw9ydrwOtidFDPQ80gRluNFnsTXm3PG+oDSOi28nnT12WrRxiVys6/u4DWift6cDX\nKN34nRNR23tYBjqptHSbxNp6Qe5W5lHJzFsj4jeUORM7AJdT5g+0hk1eRel2bx3/R5ThkM7yPUg5\n0UN595pdjrXapM9m2W4RsXVThlcDF0XE2Zm5d5ciXwssp8x3uaZzZUTsShny2qdLGVum88Q67DYZ\ntet9m96LnwP3Unq9Lm7KcfcAxxrxMYbYfnnzezRTBx7OzIXD3Hb5MI/R+VyAwet9sPbTMtRz4wma\nNvwJ4ISI+E77uqan7mzKPL2rgNMpwfaUjt2M5HVguI9DE5BzbjQpZOZdlPkZ76P0PLT7E2UsvGXT\nMTrsth1/7wT8url9I7BFZi5s5n/cTnnHfRLwPIbvBsqcg3Y7U97V3zTyIg/qIkqo2AW4PDNvpczh\n+TTlJNvqqbqR8s707rbHtpgyNNDqTVpOmRx7e9s2b6AM160mIl4bEUdk5vWZeWxm7gZ8Cnhnt+0z\n8yHKhOMDmzk17fuaRpmDsWlm3k+pw02boaTWNmtT5istGEH9tPdC7Qk8HdghM4/JzAsovUgwwquq\nRukWysm/8xLosb4k+npg+45lwxn6atc5P2eo9jNqmfl5ymTxszqOeyhwRmbulZmnZeaVrArhozVu\nj0Pjz54bTRqZ+ZVmLsGrKRMZW64G9omIKyiBfR7lc2FGqvOktUcz9+EiypU7b6LMUYEy6XJ+RJxC\neXe4PvBFylDCzSM45rHAt5r5Gd+izIU5GfheZo5kP8NxIXAZ5Z1qa6Lu5ZSJoedkZusd7KmUic1f\ni4hWz9TxlOGfG5vhltOBf2q67H9KqZfPAZ9tO94jwOYR8QxKAD2y2f58SlB4A6sP/bX7GGUY5qoo\nV7xdR7mi5VDKCXm3ZruvA4dR6vHjwB+BIylXOP3rCOrnEWCTKFdq3dXc/x0RcSXlJDePckJda+Bd\njMiAISk5xd3VAAACUklEQVQzl0XEF4CjIuI+StB9P+VxDzaHa6SOB34VEf9MuUJqS1Z9Hs5wJy4/\n0vzeKiKuY4j2M8Lydauj91FCWbu7gB2bIcSHKM/V/QAiYma3K/IG2X/LWD4OrWH23GiiGuiFdW9K\nl3D7+g8Bf6CEnG9TrsoZavig2/77O24fRxmquR54L7BH61LuzPw5ZXhla8oHzZ1PueJqt8xcPsRj\neFxmfodyFc/bKD0Qp1KGu94x1H1H4WrKBN6r2l7sL6O8aJ/fVqZFwCtYdUn1jym9CK9sXTZOmatz\nEuVS5Zsok3YPz8zW1UdQAuD+wJmZeTnlipu9KCeG/0cZ0tpzoMJm5r2UnopLKMFpAfAfTVm2z8yf\nNdstacq7uHk88ykBZMcc2WXzX6AErosz81zKiewEyv91HvDlZt8DfXDfQG1qoHYwVBs8gjLM8iXg\nV5Rgdz4lvI2J5oqzN1Pa+Q2UUNiahNs6zqDtuJnrdCbl+XLUMNvPcK127My8jRJm230YuA/4T8o8\npb+mTDSHVf+voeq78ziLGLvHoTVsWn//eH72kiRpNJrLm69oP5FGxMXAnZm5zxgd48XA8sy8rm3Z\nnpQgt15bb540qTgsJUkT0yHAvhFxCKXHbXfK8N9ug95rZOYCx0b5gMXrKFcZfRr4hsFGk5nhRpIm\npj0ow2GXUj5VewHls3y6Xao9Ks3HLGxA+Uyf51I+tffrlIAjTVoOS0mSpKo4oViSJFXFcCNJkqpi\nuJEkSVUx3EiSpKoYbiRJUlUMN5IkqSqGG0mSVBXDjSRJqsr/BynRIIyBRZzEAAAAAElFTkSuQmCC\n",
+      "text/plain": [
+       "<matplotlib.figure.Figure at 0x1b1f50438>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
     }
    ],
    "source": [
@@ -432,7 +449,7 @@
     "mcgr_tweets = df[(df.Text.str.contains('TheNotoriousMMA|#ConorMcGregor|#TeamMcGregor')) & (~df.Text.str.contains('NateDiaz209|#NateDiaz|#TeamDiaz'))].shape[0]\n",
     "\n",
     "x = [0,1]\n",
-    "y = [2717,2834]\n",
+    "y = [diaz_tweets,mcgr_tweets]\n",
     "ypos = [0,1]\n",
     "objects = ('Diaz','McGregor')\n",
     "mp.barh(x, y, align='center', color='deepskyblue')\n",
@@ -444,7 +461,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Before separating the fighters, Diaz and Mcgregor were mentioned almost the same number of times (2717 for Diaz, 2834 for McGregor). After separation, I was able to clearly identify 217 and 372 instances of Diaz and McGregor support, respectively. Interestingly, these values account for 37% and 63% of the 589 tweets, which is almost identical to the 35/65 split identified in UFC's own pre-fight poll of fight fans around the world.\n",
+    "Before separating the fighters, Diaz and Mcgregor were mentioned almost the same number of times (2717 for Diaz, 2834 for McGregor). After separation, I was able to clearly identify 176 and 293 instances of Diaz and McGregor support, respectively. Interestingly, these values account for 38% and 62% of the 469 tweets, which is almost identical to the 35/65 split identified in UFC's own pre-fight poll of fight fans around the world.\n",
     "\n",
     "# A Video of Worldwide Tweets\n",
     "As a last aside, I thought it would be interesting to create a short video showing the locations of our Twitter users as they sent out tweets in near real time. To do this, we invoke the animation library from matplotlib to animate a series of Basemap images like the ones shown in the earlier section Looking at Languages. The script is a simple function which loops through the latitude and longitude positions of each user (where available), and plots a single point on our map. These images are collected by animation.FuncAnimation(), and saved in mp4 format. For brevity, I loop over only the first 500 points."
@@ -530,15 +547,6 @@
     "\n",
     "In terms of tweet frequency, rates averaged about 18 tweets per second, maxing out at nearly twice this value. Rates varied significantly over the short time that the API was collecting tweets, and showed several prominent peaks, the largest of which ocurred 6 minutes before the start of the main event, and corresponding to a stunning knockout finish by Anothony Johnson. Of the two main event fighters, McGregor was mentioned (in isolation) almost twice as often as Diaz, closely reflecting UFC fight fan poll numbers aquired before the bout."
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
