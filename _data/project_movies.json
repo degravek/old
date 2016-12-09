@@ -117,7 +117,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The user data contains the age, sex, occupation, and zip-code for each of the 943 participants. There are a total of 670 males and 237 females in the sample. Let's take a look at the distribution of user ages."
+    "The user data contains the age, sex, occupation, and ZIP-code for each of the 943 participants. There are a total of 670 males and 237 females in the sample. Let's take a look at the distribution of user ages."
    ]
   },
   {
