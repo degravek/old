@@ -1,9 +1,9 @@
 ---
 layout:     notebook
-title:      A Simple Film Recommender System using the MovieLens Data Set
+title:      A Simple Film Recommender System
 author:     Kyle DeGrave
 tags: 		  jupyter workflows template
-#subtitle:   Predicting Survival Rates on Titanic
+subtitle:   Diving into the MovieLens Data Set
 category:   project1
 
 notebookfilename: project_movies
