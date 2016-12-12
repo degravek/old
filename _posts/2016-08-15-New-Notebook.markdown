@@ -1,9 +1,9 @@
 ---
 layout:     notebook
-title:      A Simple Film Recommender System
+title:      Diving into the MovieLens Data Set
 author:     Kyle DeGrave
 tags: 		  jupyter workflows template
-subtitle:   Diving into the MovieLens Data Set
+subtitle:   Developing a Simple Movie Recommender System
 category:   project1
 
 notebookfilename: project_movies
