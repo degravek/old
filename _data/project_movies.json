@@ -9,7 +9,7 @@
     "\n",
     "MovieLens has made available a small subset of its data compiled by the GroupLens Research Project at the University of Minnesota from September 19, 1997 to April 22, 1998. These data contain 100,000 movie ratings (on a scale of 1 to 5) of 1,682 movies made by 943 users. Here, we will dig through some of this data to see, for example, what kinds of movies people have watched, which are most popular, and we will set up a simple movie recommender system based on a k-nearest neighbors approach.\n",
     "\n",
-    "# Exploring the User Data\n",
+    "# Exploring the Data\n",
     "Let's load in the data. There are three data sets - one containing demographic information for each of the users, one containing the movies, and one containing the ratings."
    ]
   },
@@ -239,7 +239,6 @@
    "source": [
     "The map shows that user locations are concentrated heavily along the east and west coasts, though the zip-code with the most users is actually Minneapolis, Minnesota (zip-code 55414, with 9 individuals). A sizable fraction of users are also located in both the Midwest and Southeast regions of the country, while the West and Southwest regions are pretty sparse. Though not shown here, there are also several users in both Alaska and Hawaii.\n",
     "\n",
-    "# Exploring the Movie Data\n",
     "Let's now take a look at the movie dataframe."
    ]
   },
@@ -338,7 +337,6 @@
    "source": [
     "The five most common genre tags for the various movies in order are drama, comedy, action, thriller, and romance. Several of the lesser-used tags seem to be more in the line of \"sub-genres\" like \"crime\", \"fantasy\", and \"war\".\n",
     "\n",
-    "# Exploring the Ratings Data\n",
     "Let's now examine the dataframe containing the movie ratings."
    ]
   },
