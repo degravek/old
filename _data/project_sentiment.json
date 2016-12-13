@@ -485,7 +485,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The confusion matrix shows that the false positive and false negative rates are, as we had hoped, fairly small. We see, too, that the false negative rate is significantly larger than the false positive rate, meaning that we more often label a positive tweet as having negative sentiment. Perhaps the \"negative\" tweets contain more highly descriptive features like \"awful\", \"hate\", \"angry\", etc., so that our algorithm is able to more easily classify them.\n",
+    "The confusion matrix shows that the false positive and false negative rates are, as we had hoped, fairly small. We see, too, that the false negative rate is significantly larger than the false positive rate, meaning that we more often label a positive tweet as having negative sentiment. Perhaps the negative tweets contain more highly descriptive features like \"awful\", \"hate\", \"angry\", etc., so that our algorithm is able to more easily classify them.\n",
     "\n",
     "Let's now describe what precision and recall are. To do this, we'll use a handy table borrowed from  [this document](https://web.stanford.edu/~jurafsky/slp3/6.pdf)."
    ]
