@@ -9,7 +9,7 @@
     "\n",
     "With the continued rise in popularity of social media like Facebook, Twitter, and Instagram over the last decade, businesses have gained access to enormous amounts of potentially profitable data that have never been available before to any previous generation. Twitter, in particular, has been instrumental in allowing businesses to interact directly with their customers and new consumers around the world in essentially real time. As such, sentiment analysis can allow businesses to quickly identify and understand consumer attitude toward particular products, marketing strategies, etc., without the potentially arduous task of directly polling many thousands of individuals. Analyzing consumer sentiment relating to certain goods can give businesses a competitive advantage over their rivals, allowing one to quickly identify new products that may be well-received, or pin-pointing possible improvements on existing products, thereby increasing profits significantly.\n",
     "\n",
-    "In this post, I develop and detail an algorithm to identify the sentiment of tweets sent by U.S. airline travelers. This algorithm follows a naive Bayes approach under a \"bag of words\" assumption. I find that the classifier works quite well, correctly identifying tweet sentiment about 92% of the time.\n",
+    "In this post I develop and detail an algorithm to identify the sentiment of tweets sent by U.S. airline travelers. This algorithm follows a naive Bayes approach under a \"bag of words\" assumption. I find that the classifier works quite well, correctly identifying tweet sentiment about 92% of the time.\n",
     "\n",
     "Before we take a look at the code, let's go through a brief introduction of Naive Bayes classification and see how we can use it to identify tweet sentiment.\n",
     "\n",
@@ -22,7 +22,7 @@
     "\n",
     "The first tweet (positive) conveys the feeling that the sender is happy and has had a good traveling experience, while the second tweet (negative) conveys a feeling of anger or dissatisfaction with the airline service. The third tweet (neutral) conveys no sentiment; there is no identifiable positive or negative feeling or tone associated with it. To keep things simple, we will only be interested in binary classification in this post — that is, classifying sentiment as being either \"positive\" or \"negative\". To categorize these tweets, we'll be using something called a naive Bayes classifier.\n",
     "\n",
-    "The naive Bayes classifier relies on the Bayesian approach of conditional probabilities. The Bayesian approach to computing probabilities relies on Bayes' theorem, which can be stated mathematically as\n",
+    "The naive Bayes classifier relies on the Bayesian approach of conditional probabilities. The Bayesian approach to computing probabilities is based on Bayes' theorem, which can be stated mathematically as\n",
     "\n",
     "$$P(A\\vert B) = \\frac{P(B\\vert A)P(A)}{P(B)},$$\n",
     "\n",
@@ -32,7 +32,7 @@
     "* $P(A\\vert B)$, a conditional probability, is the probability of observing event A given that B is true.\n",
     "* $P(B\\vert A)$ is the probability of observing event B given that A is true.\n",
     "\n",
-    "As described above, the Bayesian approach is conditional in the sense that probabilities are computed based on \"degrees of belief\" of certain occurrences that contribute to a final probability we're trying to predict. For example, the U.S. has a population of about 320 million at the present time. If we are told that 3.2 million people currently living in the U.S. will be diagnosed with cancer at some point in their lives, we might expect our chances of getting cancer are 1%. However, this value does not take into account several important factors which may lead to a better probability estimate. For example, what if some people are smokers? What if some people do not exercise reagularly, and are generally unhealthy? As a toy example let's compute the probability of an individual being diagnosed with cancer given that they smoke regularly. In this case, the terms in the equation above would be\n",
+    "As described above, the Bayesian approach is conditional in the sense that probabilities are computed based on \"degrees of belief\" of certain occurrences that contribute to a final probability we're trying to compute. For example, the U.S. has a population of about 320 million people at the present time. If we are told that 3.2 million people currently living in the U.S. will be diagnosed with cancer at some point in their lives, we might expect our own chances of developing cancer at some point are 1%. However, such a simple calculation does not take into account several important factors which may lead to a better probability estimate. For example, what if some people are smokers? What if some people do not exercise reagularly, or are generally unhealthy? As a toy example let's compute the probability of an individual being diagnosed with cancer given that they smoke regularly. In this case, the terms in the equation above would be\n",
     "\n",
     "* $P(A\\vert B)$, the probability of getting cancer (event A) given that an individual is a smoker (event B).\n",
     "* $P(B\\vert A)$, the probability that an individual diagnosed with cancer is a smoker.\n",
@@ -43,19 +43,19 @@
     "\n",
     "$$P(cancer\\vert smoker) = \\frac{P(smoker\\vert cancer)P(cancer)}{P(smoker)} = \\frac{0.2\\times0.01}{0.1} = 2\\%,$$\n",
     "\n",
-    "or double the overall cancer diagnosis probability of 1%. Of course this is a very simple example, but it gets the point across.\n",
+    "or double the initial cancer diagnosis probability of 1%. Of course this is a very simple example, but it hopefully gets the point across.\n",
     "\n",
     "The \"naive\" part of the naive Bayes classifier comes from the assumption that features describing a particular object are independent of one another. For example, say you had a set of unlabeled animals that you wanted to classify as either being a chicken or a horse. Each animal has two defining features that one could use to classify them — weight and color. Here, it's safe to assume that the weight feature is independent of the color feature, and vice versa. In other words, the weight of an animal has no bearing on what its color might be, and its color has no bearing on how much the animal weighs. Of course this is a simple example, and the relationship between multiple variables in a real life classification situation is not always so clear-cut.\n",
     "\n",
-    "In classifying tweet text, we will be relying on a \"bag of words\" approach. This means that we treat all tweets of a given labeled class as being a giant unordered group (or \"bag\") of words. When presented with an unlabeled tweet to classify, we will look at its individual words and compare the number of times they occur in the \"positive\" bag to the number times they occur in the \"negative\" bag. If the words occur more often in the positive bag, we simply label the tweet sentiment as being \"positive\", while if they occur more often in the negative bag, the tweet is labeled as \"negative\". In other words, we are interested only in word frequency in our classification. To compute the probability of a tweet belonging to a particular class $c$, we take the equation above and rewrite it as\n",
+    "In classifying tweet text, we will be relying on a \"bag of words\" approach. This means that we treat all tweets of a given labeled class as being a giant unordered group (or \"bag\") of words. When presented with an unlabeled tweet to classify, we will look at its individual words and compare the number of times they occur in the \"positive\" bag to the number times they occur in the \"negative\" bag. If the words occur more often in the positive bag, we simply label the tweet sentiment as being \"positive\", while if they occur more often in the negative bag, the tweet is labeled as being \"negative\". In other words, we are interested only in word frequency in our classification. To compute the probability of a tweet belonging to a particular class $c$, we take Bayes' theorem and rewrite it as\n",
     "\n",
     "$$\\hat{c} = \\mathrm{argmax_{c}} \\frac{P(t\\vert c)P(c)}{P(t)}.$$\n",
     "\n",
-    "We can also make the simplification that P(t&#124;c), the probability of tweet $t$ being in class $c$, can be represented by the probability of its individual words being in $c$. Mathematically, this can be written as\n",
+    "We can also make the simplification that $P(t\\vert c)$, the probability of tweet $t$ being in class $c$, can be represented by the probability of its individual words being in $c$. Mathematically, this can be written as\n",
     "\n",
     "$$P(t\\vert c) = P(w_1\\vert c) \\cdot P(w_2\\vert c) \\cdot \\ldots \\cdot P(w_n\\vert c),$$\n",
     "\n",
-    "where $w_i$ is a single word in the tweet, and $n$ is the total number of words in the tweet. Combining the last two equations, we get\n",
+    "where $w_i$ is the $i^{\\rm{th}}$ word in the tweet, and $n$ is the total number of words in the tweet. Combining the last two equations, we get\n",
     "\n",
     "$$\\hat{c} = \\mathrm{argmax_{c}} P(c)\\big[P(w_1\\vert c) \\cdot P(w_2\\vert c) \\cdot \\ldots \\cdot P(w_n\\vert c)\\big].$$\n",
     "\n",
@@ -84,11 +84,11 @@
     "\n",
     "$$P(w_i\\vert c) = \\frac{count(w_i,c)+1}{\\sum_v count(w,c)+N_v}.$$\n",
     "\n",
-    "Notice that even if $count(w_i,c)$ is zero, the $+1$ keeps $P(w_i\\vert c)$ from going to zero. The denominator also contains a new term, $N_v$. This is called the vocabulary &#8212; the number of unique words in the full training set. So to summarize, before we can classify a new tweet, we need to train the classifier. During the training procedure, we must compute\n",
+    "Notice that even if $count(w_i,c)$ is zero, the $+1$ term keeps $P(w_i\\vert c)$ from going to zero. The denominator also contains a new term, $N_v$. This is called the vocabulary &#8212; the number of unique words in the full training set. So to summarize, before we can classify a new tweet, we need to train the classifier. During the training procedure, we must compute\n",
     "\n",
-    "* The priors, $P(c)$, for each class $c$\n",
-    "* The list of all words in each class $c$\n",
-    "* The number of unique words in the training set (the vocabulary)\n",
+    "* The priors, $P(c)$, for each class $c$.\n",
+    "* The list of all words in each class $c$.\n",
+    "* The number of unique words in the training set (the vocabulary).\n",
     "\n",
     "Okay, now that we have some understanding of how the classifier works, we can go on and explore the data!\n",
     "\n",
@@ -98,17 +98,17 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 39,
+   "execution_count": 49,
    "metadata": {
     "collapsed": false
    },
    "outputs": [
     {
      "ename": "IndentationError",
-     "evalue": "unexpected indent (<ipython-input-39-c4bc33a01623>, line 3)",
+     "evalue": "unexpected indent (<ipython-input-49-c4bc33a01623>, line 3)",
      "output_type": "error",
      "traceback": [
-      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-39-c4bc33a01623>\"\u001b[0;36m, line \u001b[0;32m3\u001b[0m\n\u001b[0;31m    tweet_id airline_sentiment  airline_sentiment_confidence  0  570306133677760513           neutral                        1.0000\u001b[0m\n\u001b[0m    ^\u001b[0m\n\u001b[0;31mIndentationError\u001b[0m\u001b[0;31m:\u001b[0m unexpected indent\n"
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-49-c4bc33a01623>\"\u001b[0;36m, line \u001b[0;32m3\u001b[0m\n\u001b[0;31m    tweet_id airline_sentiment  airline_sentiment_confidence  0  570306133677760513           neutral                        1.0000\u001b[0m\n\u001b[0m    ^\u001b[0m\n\u001b[0;31mIndentationError\u001b[0m\u001b[0;31m:\u001b[0m unexpected indent\n"
      ]
     }
    ],
@@ -157,12 +157,12 @@
    "source": [
     "We can see the data contain information regarding the the names of various U.S. airline companies, the text contained in each user's tweet, tweet sentiment (postive, negative, or neutral), the reason for any negative sentiment toward a particular airline, user location where available, etc. Here, we will try and identify tweet sentiment based solely on the text of the tweet, ignoring all other data columns.\n",
     "\n",
-    "Let's start by loading in the appropriate Python libraries and reading in the tweet data. We then grab only data columns 'text' and 'airline_sentiment'."
+    "Let's start by loading in the appropriate Python libraries and reading in the tweet data. We then grab only data columns \"text\" and \"airline_sentiment\"."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 40,
+   "execution_count": 50,
    "metadata": {
     "collapsed": false
    },
@@ -190,12 +190,12 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "At the moment, the full set of 14,640 tweets is comprised of 2,363 positive ones, 9,178 negative ones, and 3,099 neutral ones. The code snippet belows allows us to define the number of different classes we'll divide the tweets into. In this particular post, we are only interested in binary classification; in other words classifying tweets as either positive or negative, ignoring the neutral ones. We therefore set n_class = 2. We can also define the number of tweets per class we'll use in our training set. Because the positive and negative classes have a very different number of tweets (i.e, the classes are imbalanced), we set n_tweet = 2,363, the number of positive tweets. If the classes are severely unbalanced (this is quite common in practice) it is often the case that the algorithm will learn that always guessing the more prevalent class (the negative class in our case) is a good thing to do, and will subsequently misclassify many of the positive instances. Dataframes df_pos and df_neg are then concatenated to create one final set of data."
+    "At the moment, the full set of 14,640 tweets is comprised of 2,363 positive ones, 9,178 negative ones, and 3,099 neutral ones. The code snippet belows allows us to define the number of different classes we'll divide the tweets into. In this particular post, we are only interested in binary classification; in other words classifying tweets as either positive or negative, ignoring the neutral ones. We therefore set n_class = 2. We can also define the number of tweets per class we'll use in our training set. If the classes have a very different number of tweets (i.e, the classes are imbalanced) it is often the case that the algorithm will learn that always guessing the more prevalent class (the negative class in our case) is a good thing to do, and will subsequently misclassify many of the positive instances. As such, and because the positive and negative classes are in fact imbalanced in our case, we set n_tweet = 2,363, the number of positive tweets. Dataframes df_pos and df_neg are then concatenated to create one final set of data."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 41,
+   "execution_count": 51,
    "metadata": {
     "collapsed": true
    },
@@ -229,7 +229,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 42,
+   "execution_count": 52,
    "metadata": {
     "collapsed": true
    },
@@ -258,7 +258,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 43,
+   "execution_count": 53,
    "metadata": {
     "collapsed": true
    },
@@ -286,7 +286,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 44,
+   "execution_count": 54,
    "metadata": {
     "collapsed": true
    },
@@ -316,7 +316,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 45,
+   "execution_count": 55,
    "metadata": {
     "collapsed": true
    },
@@ -419,16 +419,29 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 46,
+   "execution_count": 59,
    "metadata": {
     "collapsed": false
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(0.9243589743589744, 0.9568845618915159, 0.8877419354838709)"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "tnb = TweetNBClassifier(df_train)\n",
     "tnb = tnb.fit()\n",
     "predict = tnb.predict(df_test)\n",
-    "score = tnb.score(predict, df_test.airline_sentiment.tolist())"
+    "score = tnb.score(predict, df_test.airline_sentiment.tolist())\n",
+    "\n",
+    "(0.9243589743589744, 0.9568845618915159, 0.8877419354838709)"
    ]
   },
   {
@@ -472,6 +485,8 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "The confusion matrix shows that the false positive and false negative rates are, as we had hoped, fairly small. We see, too, that the false negative rate is significantly larger than the false positive rate, meaning that we more often label a positive tweet as having negative sentiment. Perhaps the \"negative\" tweets contain more highly descriptive features like \"awful\", \"hate\", \"angry\", etc., so that our algorithm is able to more easily classify them.\n",
+    "\n",
     "Let's now describe what precision and recall are. To do this, we'll use a handy table borrowed from  [this document](https://web.stanford.edu/~jurafsky/slp3/6.pdf)."
    ]
   },
