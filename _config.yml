@@ -8,7 +8,7 @@ url: "https://projectpages.github.io"
 
 # Secondary Parameters
 baseurl: "/project-pages"
-header-img: img/home-bg2.jpg
+header-img: img/home-bg.jpg
 headercolor: "#FFFFFF"
 
 # Tertiary Parameters
