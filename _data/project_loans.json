@@ -150,10 +150,12 @@
    ]
   },
   {
-   "cell_type": "markdown",
+   "cell_type": "code",
+   "execution_count": null,
    "metadata": {
-    "collapsed": false
+    "collapsed": true
    },
+   "outputs": [],
    "source": [
     "df.apply(lambda x: x.isnull().sum(), axis=0)\n",
     "\n",
