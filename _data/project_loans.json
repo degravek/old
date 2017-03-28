@@ -497,8 +497,12 @@
    ]
   },
   {
-   "cell_type": "markdown",
-   "metadata": {},
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
    "source": [
     "print(classification_report(y_test, predict))\n",
     "\n",
