@@ -22,7 +22,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 50,
    "metadata": {
     "collapsed": true
    },
@@ -65,7 +65,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 51,
    "metadata": {
     "collapsed": false
    },
@@ -86,7 +86,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 52,
    "metadata": {
     "collapsed": false
    },
@@ -150,51 +150,40 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 7,
+   "cell_type": "markdown",
    "metadata": {
     "collapsed": false
    },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "LoanID                 0\n",
-       "Channel                0\n",
-       "SellerName             0\n",
-       "OrInterestRate         1\n",
-       "OrUnpaidPrinc          0\n",
-       "OrLoanTerm             0\n",
-       "OrDate                 0\n",
-       "FirstPayment           0\n",
-       "OrLTV                  0\n",
-       "OrCLTV                32\n",
-       "NumBorrow              6\n",
-       "DTIRat             10375\n",
-       "CreditScore          530\n",
-       "FTHomeBuyer            0\n",
-       "LoanPurpose            0\n",
-       "PropertyType           0\n",
-       "NumUnits               0\n",
-       "OccStatus              0\n",
-       "PropertyState          0\n",
-       "Zip                    0\n",
-       "MortInsPerc       260578\n",
-       "ProductType            0\n",
-       "CoCreditScore     205146\n",
-       "MortInsType       260578\n",
-       "RelMortInd             0\n",
-       "Default                0\n",
-       "dtype: int64"
-      ]
-     },
-     "execution_count": 7,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
    "source": [
-    "df.apply(lambda x: x.isnull().sum(), axis=0)"
+    "df.apply(lambda x: x.isnull().sum(), axis=0)\n",
+    "\n",
+    "LoanID                 0\n",
+    "Channel                0\n",
+    "SellerName             0\n",
+    "OrInterestRate         1\n",
+    "OrUnpaidPrinc          0\n",
+    "OrLoanTerm             0\n",
+    "OrDate                 0\n",
+    "FirstPayment           0\n",
+    "OrLTV                  0\n",
+    "OrCLTV                32\n",
+    "NumBorrow              6\n",
+    "DTIRat             10375\n",
+    "CreditScore          530\n",
+    "FTHomeBuyer            0\n",
+    "LoanPurpose            0\n",
+    "PropertyType           0\n",
+    "NumUnits               0\n",
+    "OccStatus              0\n",
+    "PropertyState          0\n",
+    "Zip                    0\n",
+    "MortInsPerc       260578\n",
+    "ProductType            0\n",
+    "CoCreditScore     205146\n",
+    "MortInsType       260578\n",
+    "RelMortInd             0\n",
+    "Default                0\n",
+    "dtype: int64"
    ]
   },
   {
@@ -506,28 +495,17 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": 24,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "             precision    recall  f1-score   support\n",
-      "\n",
-      "          0       0.92      1.00      0.96     76778\n",
-      "          1       1.00      0.90      0.94     65766\n",
-      "\n",
-      "avg / total       0.95      0.95      0.95    142544\n",
-      "\n"
-     ]
-    }
-   ],
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
-    "print(classification_report(y_test, predict))"
+    "print(classification_report(y_test, predict))\n",
+    "\n",
+    "             precision    recall  f1-score   support\n",
+    "\n",
+    "          0       0.92      1.00      0.96     76778\n",
+    "          1       1.00      0.90      0.94     65766\n",
+    "\n",
+    "avg / total       0.95      0.95      0.95    142544"
    ]
   },
   {
