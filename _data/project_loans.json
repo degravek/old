@@ -233,11 +233,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The two classes (default = 1 and non-default = 0) are extremely imbalanced here; defaulters make up only about 10% of all borrowers in this particular dataset. For very imbalanced data sets, it is often the case that machine learning algorithms will have a tendency to always predict the more dominant class when presented with new, unseen test data. To avoid an overabundance of false negatives, we can eventually balance the classes so that the dataframe contains equal numbers of defaulters and non-defaulters. However, let's continue looking at some more of the data first.\n",
-    "\n",
-    "df['MortInsPerc'].fillna(-1, inplace=True)\n",
-    "df['MortInsType'].fillna(-1, inplace=True)\n",
-    "df['CoCreditScore'].fillna(-1, inplace=True)"
+    "The two classes (default = 1 and non-default = 0) are extremely imbalanced here; defaulters make up only about 10% of all borrowers in this particular dataset. For very imbalanced data sets, it is often the case that machine learning algorithms will have a tendency to always predict the more dominant class when presented with new, unseen test data. To avoid an overabundance of false negatives, we can eventually balance the classes so that the dataframe contains equal numbers of defaulters and non-defaulters. However, let's continue looking at some more of the data first."
    ]
   },
   {
