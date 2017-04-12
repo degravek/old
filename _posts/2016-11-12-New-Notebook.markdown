@@ -6,6 +6,6 @@ tags: 		  jupyter workflows template
 #subtitle:  Analyzing Single Family Loan Performance Data
 category:   project1
 
-notebookfilename: Untitled2
+notebookfilename: project_loans
 #visualworkflow: true
 ---
