@@ -701,13 +701,8 @@
    "source": [
     "df_test['predict'] = predict\n",
     "\n",
-    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']]"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
+    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']]\n",
+    "\n",
     "                                                    text  clickbait  predict\n",
     "12060               bruno mars might headline super bowl          1        0\n",
     "13695  priest reportedly suspended for riding a hover...          1        0\n",
@@ -718,8 +713,14 @@
     "21931  controversial rapper dethrones mariah carey fr...          0        1\n",
     "2482       arjun kapoor was in neerja and no one noticed          1        0\n",
     "12222  fyi beans from even stevens is working at a ma...          1        0\n",
-    "13095             the pros and cons of living in florida          1        0\n",
     "\n",
+    "13095             the pros and cons of living in florida          1        0"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "There actually appear to be many cases where a headline was deemed to be clickbait, though I personally would not have classified it as such. For example, the headline \"bruno mars migt headline superbowl\" was labeled as clickbait by the collectors of this dataset, though this seems to constitute a legitimate news headline."
    ]
   },
