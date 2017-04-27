@@ -700,21 +700,15 @@
    "outputs": [],
    "source": [
     "df_test['predict'] = predict\n",
-    "\n",
     "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']]\n",
+    "\n",
     "\n",
     "                                                    text  clickbait  predict\n",
     "12060               bruno mars might headline super bowl          1        0\n",
     "13695  priest reportedly suspended for riding a hover...          1        0\n",
     "15652                     night owls become early risers          1        0\n",
     "759    number differences between snow days in canada...          1        0\n",
-    "4046        hear a clip of good charlottes comeback song          1        0\n",
-    "29061  when words are worth a thousand pictures at ba...          0        1\n",
-    "21931  controversial rapper dethrones mariah carey fr...          0        1\n",
-    "2482       arjun kapoor was in neerja and no one noticed          1        0\n",
-    "12222  fyi beans from even stevens is working at a ma...          1        0\n",
-    "\n",
-    "13095             the pros and cons of living in florida          1        0"
+    "4046        hear a clip of good charlottes comeback song          1        0"
    ]
   },
   {
