@@ -701,7 +701,7 @@
    "source": [
     "df_test['predict'] = predict\n",
     "\n",
-    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']][:10]\n",
+    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']].head(10)\n",
     "\n",
     "                                                    text  clickbait  predict\n",
     "12060               bruno mars might headline super bowl          1        0\n",
