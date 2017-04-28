@@ -29,7 +29,9 @@
   {
    "cell_type": "code",
    "execution_count": 52,
-   "metadata": {},
+   "metadata": {
+    "collapsed": true
+   },
    "outputs": [],
    "source": [
     "from sklearn.feature_extraction.text import TfidfVectorizer\n",
@@ -203,7 +205,9 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "collapsed": true
+   },
    "outputs": [],
    "source": [
     "                                                text  clickbait  question  \\\n",
@@ -469,7 +473,9 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "collapsed": true
+   },
    "outputs": [],
    "source": [
     "param_grid = [{'C': np.linspace(90,100,20)}]\n",
@@ -723,7 +729,9 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "collapsed": true
+   },
    "outputs": [],
    "source": [
     "df_test['predict'] = predict\n",
@@ -757,15 +765,6 @@
     "\n",
     "Well, that’s all I have for now. Thanks for following along!"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
