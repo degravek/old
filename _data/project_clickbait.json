@@ -90,13 +90,13 @@
     "* Ratio of stop words to total number of words\n",
     "* Ratio of contractions to total number of words\n",
     "\n",
-    "To produce these new features, we'll first need to define a few functions. The function process_text carries out the tast of processing the raw headlines. It makes every headline lowercase, removes any punctuation and extra white space, and replaces any numerical values with the word \"number\". Next, the function cnt_stop_words tokenizes (splits) each headline into it's individual words, and counts the number words that appear in the NLTK corpus of pre-defined stop words.\n",
+    "To produce these new features, we'll first need to define a few functions. The function process_text carries out the task of processing the raw headlines. It makes every headline lowercase, removes any punctuation and extra white space, and replaces any numerical values with the word \"number\". Next, the function cnt_stop_words tokenizes (splits) each headline into it's individual words, and counts the number of those words that appear in the NLTK corpus of pre-defined stop words.\n",
     "\n",
-    "It is often the case that clickbait headlines are stated in the form of a question. For example, something like \"Can you spot the amazing thing in this photo?\". Since the particular dataset we're using doesn't actually contain punctuation like question marks, we can try to determine if the text is stated as a question based on the first word in the headline. Questions typically start with words like \"who\", \"what\", \"when\", \"can\", etc. To this end, we can define a list of \"question_words\", and a function to check if any of these words starts a headline.\n",
+    "It is often the case that clickbait headlines are stated in the form of a question. For example, something like \"Can you spot the amazing thing in this photo?\". Since the particular dataset we're using doesn't actually contain punctuation like question marks, we can try to determine if the text is stated as a question based on the first word in the headline. Questions typically start with words like \"who\", \"what\", \"when\", \"can\", etc. To this end, we can define a list of question_words, and a function to check if any of these words starts a headline.\n",
     "\n",
-    "Clickbait headlines also tend to contain more informal writing than traditional news headlines. As such, they may contain many more contractions, occurrences of slang, etc. Below, we can make a list of possible contractions to look for, as well as a function to carry this out.\n",
+    "Clickbait headlines also tend to contain more informal writing than non-clickbait headlines. As such, they may contain many more contractions, occurrences of slang, etc. Below, we can make a list of possible contractions to look for, as well as a function to check for them.\n",
     "\n",
-    "Lastly, a function is defined to check the part-of-speech of each word in a headline. It's possible that traditional news headlines contain, for example, more nouns than do clickbait headlines. This part-of-speech tagging is carried out using methods from the NLTK package."
+    "Lastly, a function is defined to check the part-of-speech (i.e., noun, verb, adjective, etc.) of each word in a headline. It's possible that non-clickbait headlines contain, for example, more nouns than do clickbait headlines. This part-of-speech tagging is carried out using methods from the NLTK package."
    ]
   },
   {
@@ -285,7 +285,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Well, there definitely do appear to to be differences between the clickbait and non-clickbait headlines in terms of number of words, stop words, and contractions. As I suspected, clickbait headlines are much more likely to be phrased as a question. They also have more total words, more stop words, and more contractions on average.\n",
+    "Well, there definitely do appear to be differences between the clickbait and non-clickbait headlines in terms of number of words, stop words, and contractions. As I suspected, clickbait headlines are also much more likely to be phrased as a question.\n",
     "\n",
     "Let's check for collinearity in the numerical data."
    ]
@@ -325,7 +325,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "There does appear to some collinearity present, especially between num_words vs. num_stop_words, between num_stop_words vs. stop_word_ratio, and between num_contract vs. contract_ratio. This makes sense. This collinearity could potentially jeopardize the accuracy of our classifier. To this end, let's drop num_stop_words and num_contract from our dataset."
+    "There does appear to be some collinearity present, especially between num_words vs. num_stop_words, between num_stop_words vs. stop_word_ratio, and between num_contract vs. contract_ratio. This makes sense. This collinearity could potentially jeopardize the accuracy of our classifier, though, and to this end, we can go ahead and drop num_stop_words and num_contract from our dataset."
    ]
   },
   {
@@ -463,7 +463,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "It turns out that logistic regression tends to give the best results for this classification problem. Below we can use GridSearchCV to find the best regularization parameter for the job."
+    "It turns out that logistic regression tends to give the best results for this classification problem, so we'll use it here. Below, we can use GridSearchCV to find the best regularization parameter for the job."
    ]
   },
   {
@@ -715,9 +715,9 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "As we may expect, the words are quite different between the two sets. Clickbait headlines tend to contain words like \"best\", \"character\", \"love\", etc., while the non-clickbait headlines contain more serious subject matter like \"president\", \"iraq\", and \"government\". Also, note that one of the top clickbait features is \"number things\", representing headlines like \"10 things you'll never believe!\".\n",
+    "As we might expect, the words are quite different between the two sets. Clickbait headlines tend to contain words like \"best\", \"character\", \"love\", etc., while the non-clickbait headlines contain more serious subject matter like \"president\", \"iraq\", and \"government\". Also, note that one of the top clickbait features is \"number things\", representing headlines like \"10 things you'll never believe!\".\n",
     "\n",
-    "Let's take a look at the headlines we misclassified."
+    "Let's take a look at some of the headlines we misclassified."
    ]
   },
   {
@@ -750,13 +750,22 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "There actually appear to be a few cases where a headline was deemed to be clickbait, though I personally might not have classified it as such. For example, the headline \"bruno mars might headline superbowl\", and \"night owls become early risers\" were labeled as clickbait by the collectors of this dataset, though these could possibly constitute a legitimate news headlines (albeit maybe poor ones).\n",
+    "There actually appear to be a few cases where a headline was deemed to be clickbait, though I personally might not have classified it as such. For example, the headlines \"bruno mars might headline superbowl\", and \"night owls become early risers\" were labeled as clickbait by the collectors of this dataset, though these could possibly constitute legitimate news headlines (albeit maybe poor ones).\n",
     "\n",
     "# Concluding Remarks\n",
     "In this notebook we used logistic regression and natural language processing to accurately classify clickbait headlines. The results were surprisingly good, as we obtained an accuracy score of 97.6%, an F1-score of 0.98, and an ROC AUC of 0.98. This classifier actually performs better than that of Chakraborty et al., in which an accuracy score of 93% was achieved. An interesting next step would be to use this classifier to deploy a real clickbait detection extension for a web browser like Firefox or Safari. This was actually done in the Chakraborty et al. paper, where an accuracy of 83% in blocking clickbaits was attained.\n",
     "\n",
     "Well, that’s all I have for now. Thanks for following along!"
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
   }
  ],
  "metadata": {
