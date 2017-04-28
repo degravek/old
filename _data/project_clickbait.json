@@ -4,7 +4,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Introduction\n",
+    "# Detecting Clickbait Headlines using Machine Learning\n",
     "In today's age of information, we are constantly bombarded with advertisements and news headlines of various kinds on virtually every web page we visit.\n",
     "\n",
     "Sites competing for viewers, and so they are pushed to produce ever more interesting and provacative headlines. Sites like BuzzFeed are known for this.\n",
@@ -202,23 +202,110 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 162,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>text</th>\n",
+       "      <th>clickbait</th>\n",
+       "      <th>question</th>\n",
+       "      <th>num_words</th>\n",
+       "      <th>stop_word_ratio</th>\n",
+       "      <th>contract_ratio</th>\n",
+       "      <th>num_stop_words</th>\n",
+       "      <th>num_contract</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>should i get bings</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0.500000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>which tv female friend group do you belong in</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>9</td>\n",
+       "      <td>0.444444</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>the new star wars the force awakens trailer is...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>14</td>\n",
+       "      <td>0.428571</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>6</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>this vine of new york on celebrity big brother...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>12</td>\n",
+       "      <td>0.333333</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>a couple did a stunning photo shoot with their...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>18</td>\n",
+       "      <td>0.500000</td>\n",
+       "      <td>0.0</td>\n",
+       "      <td>9</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                text  clickbait  question  \\\n",
+       "0                                 should i get bings          1         1   \n",
+       "1      which tv female friend group do you belong in          1         1   \n",
+       "2  the new star wars the force awakens trailer is...          1         0   \n",
+       "3  this vine of new york on celebrity big brother...          1         1   \n",
+       "4  a couple did a stunning photo shoot with their...          1         0   \n",
+       "\n",
+       "   num_words  stop_word_ratio  contract_ratio  num_stop_words  num_contract  \n",
+       "0          4         0.500000             0.0               2             0  \n",
+       "1          9         0.444444             0.0               4             0  \n",
+       "2         14         0.428571             0.0               6             0  \n",
+       "3         12         0.333333             0.0               4             0  \n",
+       "4         18         0.500000             0.0               9             0  "
+      ]
+     },
+     "execution_count": 162,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
-    "                                                text  clickbait  question  \\\n",
-    "0                                 should i get bings          1         1   \n",
-    "1      which tv female friend group do you belong in          1         1   \n",
-    "2  the new star wars the force awakens trailer is...          1         0   \n",
-    "3  this vine of new york on celebrity big brother...          1         1   \n",
-    "4  a couple did a stunning photo shoot with their...          1         0   \n",
-    "\n",
-    "   num_words  stop_word_ratio  contract_ratio  \n",
-    "0          4         0.500000             0.0  \n",
-    "1          9         0.444444             0.0  \n",
-    "2         14         0.428571             0.0  \n",
-    "3         12         0.333333             0.0  \n",
-    "4         18         0.500000             0.0 "
+    "df.head()"
    ]
   },
   {
@@ -354,7 +441,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "To convert the headline text into the numerical data necessary for classification, we can use Scikit-Learn's TfidfVectorizer. The tf-idf is short for term frequency-inverse document frequency. In essence, tf-idf counts the number of occurrences of the words in each headline and weights these frequencies by their total number of occurrences across all headlines. The idea is that commonly occurring words like \"the\" and \"can\" appear so frequently that they are very likely to be unimportant in distinguishing between the two classes."
+    "To convert the headline text into the numerical data necessary for classification, we can use Scikit-Learn's TfidfVectorizer. TF-IDF is short for term frequency-inverse document frequency. In essence, TF-IDF counts the number of occurrences of the words in each headline and weights these frequencies by their total number of occurrences across all headlines. The idea is that commonly occurring words like \"the\" and \"can\" appear so frequently that they are very likely to be unimportant in distinguishing between the two classes."
    ]
   },
   {
@@ -417,7 +504,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Lastly, we can combine the new tf-idf vectors with the scaled engineered features and store them as sparse arrays. This helps to save memory as the tf-idf vectors are extremely large, but are composed mostly of zeros."
+    "Lastly, we can combine the new TF-IDF vectors with the scaled engineered features and store them as sparse arrays. This helps to save memory as the TF-IDF vectors are extremely large, but are composed mostly of zeros."
    ]
   },
   {
@@ -443,20 +530,62 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 173,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Fitting 5 folds for each of 20 candidates, totalling 100 fits\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "[Parallel(n_jobs=1)]: Done 100 out of 100 | elapsed:   19.2s finished\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "GridSearchCV(cv=5, error_score='raise',\n",
+       "       estimator=LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,\n",
+       "          intercept_scaling=1, max_iter=100, multi_class='ovr', n_jobs=1,\n",
+       "          penalty='l2', random_state=None, solver='liblinear', tol=0.0001,\n",
+       "          verbose=0, warm_start=False),\n",
+       "       fit_params={}, iid=True, n_jobs=1,\n",
+       "       param_grid=[{'C': array([   1.     ,    6.21053,   11.42105,   16.63158,   21.84211,\n",
+       "         27.05263,   32.26316,   37.47368,   42.68421,   47.89474,\n",
+       "         53.10526,   58.31579,   63.52632,   68.73684,   73.94737,\n",
+       "         79.15789,   84.36842,   89.57895,   94.78947,  100.     ])}],\n",
+       "       pre_dispatch='2*n_jobs', refit=True, scoring='accuracy', verbose=1)"
+      ]
+     },
+     "execution_count": 173,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "param_grid = [{'C': np.linspace(1,100,20)}]\n",
     "\n",
     "grid_cv = GridSearchCV(LogisticRegression(), param_grid, scoring='accuracy', cv=5, verbose=1)\n",
-    "grid_cv.fit(X_train_text, y_train)\n",
-    "\n",
+    "grid_cv.fit(X_train_text, y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
     "print(grid_cv.best_params_)\n",
     "print(grid_cv.best_score_)\n",
     "\n",
-    "Best parameter, 'C': 37.473684210526315}\n",
-    "Best accuracry, 0.975078125"
+    "{'C': 37.473684210526315}\n",
+    "0.975078125"
    ]
   },
   {
@@ -581,7 +710,7 @@
     "collapsed": true
    },
    "source": [
-    "If we split the headlines into separate clickbait and non-clickbait groups, we can use tf-idf to compare which kinds of words occur more frequently among them."
+    "If we split the headlines into separate clickbait and non-clickbait groups, we can use TF-IDF to compare which kinds of words occur more frequently among them."
    ]
   },
   {
@@ -688,27 +817,129 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "As we may expect, the words are quite different between the two set. Clickbait headlines often contain catchy words like \"best\", \"new\", \"love\", etc., while real news headlines contain more serious subject like \"president\", \"iraq\", and \"government\". Also, note that one of the top features in the clickbait headlines is \"number things\", representing headlines like \"10 things you'll never believe!\".\n",
+    "As we may expect, the words are quite different between the two set. Clickbait headlines often contain catchy words like \"best\", \"new\", \"love\", etc., while real news headlines contain more serious topic like \"president\", \"iraq\", and \"government\".\n",
     "\n",
     "Let's take a look at the headlines we misclassified."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 201,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Users/degravek/anaconda/lib/python3.5/site-packages/ipykernel/__main__.py:1: SettingWithCopyWarning: \n",
+      "A value is trying to be set on a copy of a slice from a DataFrame.\n",
+      "Try using .loc[row_indexer,col_indexer] = value instead\n",
+      "\n",
+      "See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy\n",
+      "  if __name__ == '__main__':\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>text</th>\n",
+       "      <th>clickbait</th>\n",
+       "      <th>predict</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>12060</th>\n",
+       "      <td>bruno mars might headline super bowl</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13695</th>\n",
+       "      <td>priest reportedly suspended for riding a hover...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>15652</th>\n",
+       "      <td>night owls become early risers</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>759</th>\n",
+       "      <td>number differences between snow days in canada...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4046</th>\n",
+       "      <td>hear a clip of good charlottes comeback song</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>29061</th>\n",
+       "      <td>when words are worth a thousand pictures at ba...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>21931</th>\n",
+       "      <td>controversial rapper dethrones mariah carey fr...</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2482</th>\n",
+       "      <td>arjun kapoor was in neerja and no one noticed</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12222</th>\n",
+       "      <td>fyi beans from even stevens is working at a ma...</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13095</th>\n",
+       "      <td>the pros and cons of living in florida</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                    text  clickbait  predict\n",
+       "12060               bruno mars might headline super bowl          1        0\n",
+       "13695  priest reportedly suspended for riding a hover...          1        0\n",
+       "15652                     night owls become early risers          1        0\n",
+       "759    number differences between snow days in canada...          1        0\n",
+       "4046        hear a clip of good charlottes comeback song          1        0\n",
+       "29061  when words are worth a thousand pictures at ba...          0        1\n",
+       "21931  controversial rapper dethrones mariah carey fr...          0        1\n",
+       "2482       arjun kapoor was in neerja and no one noticed          1        0\n",
+       "12222  fyi beans from even stevens is working at a ma...          1        0\n",
+       "13095             the pros and cons of living in florida          1        0"
+      ]
+     },
+     "execution_count": 201,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "df_test['predict'] = predict\n",
-    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']]\n",
     "\n",
-    "\n",
-    "                                                    text  clickbait  predict\n",
-    "12060               bruno mars might headline super bowl          1        0\n",
-    "13695  priest reportedly suspended for riding a hover...          1        0\n",
-    "15652                     night owls become early risers          1        0\n",
-    "759    number differences between snow days in canada...          1        0\n",
-    "4046        hear a clip of good charlottes comeback song          1        0"
+    "df_test.loc[df_test['clickbait'] != df_test['predict'], ['text','clickbait','predict']][:10]"
    ]
   },
   {
