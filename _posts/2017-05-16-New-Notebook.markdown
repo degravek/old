@@ -1,6 +1,6 @@
 ---
 layout:     notebook
-title:      Topic Modeling of News Articles using NLP
+title:      Topic Modeling of News Articles using Natural Language Processing
 author:     Kyle DeGrave
 tags: 		  jupyter workflows template
 #subtitle:  Analyzing Single Family Loan Performance Data
