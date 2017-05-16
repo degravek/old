@@ -6,7 +6,7 @@ tags: 		  jupyter workflows template
 #subtitle:  Analyzing Single Family Loan Performance Data
 category:   project1
 
-link: https://nbviewer.jupyter.org/github/degravek/notebooks/blob/master/project_topic_modeling.ipynb
+link: https://nbviewer.jupyter.org/github/degravek/notebooks/blob/master/project_topic_modeling.ipynb?flush_cache=true
 notebookfilename: project_topic_modeling
 #visualworkflow: true
 ---
