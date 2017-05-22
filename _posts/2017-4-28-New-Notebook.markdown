@@ -1,6 +1,6 @@
 ---
 layout:     notebook
-title:      Detecting Clickbait Headlines Using Machine Learning and NLP
+title:      Detecting Clickbait Headlines Using Machine Learning
 author:     Kyle DeGrave
 tags: 		  jupyter workflows template
 #subtitle:  Analyzing Single Family Loan Performance Data
