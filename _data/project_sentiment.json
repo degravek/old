@@ -32,18 +32,18 @@
     "* $P(A\\vert B)$, a conditional probability, is the probability of observing event A given that B is true.\n",
     "* $P(B\\vert A)$ is the probability of observing event B given that A is true.\n",
     "\n",
-    "As described above, the Bayesian approach is conditional in the sense that probabilities are computed based on \"degrees of belief\" of certain occurrences that contribute to a final probability we're trying to compute. For example, the U.S. has a population of about 320 million people at the present time. If we are told that 3.2 million people currently living in the U.S. will be diagnosed with cancer at some point in their lives, we might expect our own chances of developing cancer at some point are 1%. However, such a simple calculation does not take into account several important factors which may lead to a better probability estimate. For example, what if some people are smokers? What if some people do not exercise reagularly, or are generally unhealthy? As a toy example let's compute the probability of an individual being diagnosed with cancer given that they smoke regularly. In this case, the terms in the equation above would be\n",
+    "As described above, the Bayesian approach is conditional in the sense that probabilities are computed based on \"degrees of belief\" of certain occurrences that contribute to a final probability we're trying to compute. For example, the U.S. has a population of about 320 million people at the present time. If we are told that 32 million people currently living in the U.S. will be diagnosed with cancer at some point in their lives, we might expect our own chances of developing cancer at some point are 10%. However, such a simple calculation does not take into account several important factors which may lead to a better probability estimate. For example, what if some people are smokers? What if some people do not exercise reagularly, or are generally unhealthy? As a toy example, let's compute the probability of an individual being diagnosed with cancer given that they smoke regularly. In this case, the terms in the equation above would be\n",
     "\n",
     "* $P(A\\vert B)$, the probability of getting cancer (event A) given that an individual is a smoker (event B).\n",
     "* $P(B\\vert A)$, the probability that an individual diagnosed with cancer is a smoker.\n",
     "* $P(A)$, the probability of anyone (smoker or not) being diagnosed with cancer.\n",
     "* $P(B)$, the probability that an individual is a smoker.\n",
     "\n",
-    "For this example, let's suppose that the probability that an individual diagnosed with cancer is a smoker is 20%, and that 10% of the U.S. population are smokers (these are made-up numbers). We then compute the probability of being diagnosed with cancer as\n",
+    "For this example, let's suppose that the probability that an individual diagnosed with cancer is a smoker is 60%, and that 20% of the U.S. population are smokers. We then compute the probability of a smoker being diagnosed with cancer as\n",
     "\n",
-    "$$P(cancer\\vert smoker) = \\frac{P(smoker\\vert cancer)P(cancer)}{P(smoker)} = \\frac{0.2\\times0.01}{0.1} = 2\\%,$$\n",
+    "$$P(cancer\\vert smoker) = \\frac{P(smoker\\vert cancer)P(cancer)}{P(smoker)} = \\frac{0.6\\times0.1}{0.2} = 30\\%,$$\n",
     "\n",
-    "or double the initial cancer diagnosis probability of 1%. Of course this is a very simple example, but it hopefully gets the point across.\n",
+    "or triple the population cancer diagnosis probability of 10%. Of course this is a very simple example, but hopefully it gets the point across.\n",
     "\n",
     "The \"naive\" part of the naive Bayes classifier comes from the assumption that features describing a particular object are independent of one another. For example, say you had a set of unlabeled animals that you wanted to classify as either being a chicken or a horse. Each animal has two defining features that one could use to classify them — weight and color. Here, it's safe to assume that the weight feature is independent of the color feature, and vice versa. In other words, the weight of an animal has no bearing on what its color might be, and its color has no bearing on how much the animal weighs. Of course this is a simple example, and the relationship between multiple variables in a real life classification situation is not always so clear-cut.\n",
     "\n",
@@ -98,23 +98,10 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 49,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "ename": "IndentationError",
-     "evalue": "unexpected indent (<ipython-input-49-c4bc33a01623>, line 3)",
-     "output_type": "error",
-     "traceback": [
-      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-49-c4bc33a01623>\"\u001b[0;36m, line \u001b[0;32m3\u001b[0m\n\u001b[0;31m    tweet_id airline_sentiment  airline_sentiment_confidence  0  570306133677760513           neutral                        1.0000\u001b[0m\n\u001b[0m    ^\u001b[0m\n\u001b[0;31mIndentationError\u001b[0m\u001b[0;31m:\u001b[0m unexpected indent\n"
-     ]
-    }
-   ],
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
    "source": [
-    "df.head()\n",
-    "\n",
     "             tweet_id airline_sentiment  airline_sentiment_confidence  \\\n",
     "0  570306133677760513           neutral                        1.0000   \n",
     "1  570301130888122368          positive                        0.3486   \n",
@@ -137,11 +124,11 @@
     "4                    NaN    jnardino                 NaN              0   \n",
     "\n",
     "                                                text tweet_coord  \\\n",
-    "0                @VirginAmerica What @dhepburn said.         NaN   \n",
-    "1  @VirginAmerica plus you've added commercials t...         NaN   \n",
-    "2  @VirginAmerica I didn't today... Must mean I n...         NaN   \n",
-    "3  @VirginAmerica it's really aggressive to blast...         NaN   \n",
-    "4  @VirginAmerica and it's a really big bad thing...         NaN   \n",
+    "0                VirginAmerica What dhepburn said.         NaN   \n",
+    "1  VirginAmerica plus you've added commercials t...         NaN   \n",
+    "2  VirginAmerica I didn't today... Must mean I n...         NaN   \n",
+    "3  VirginAmerica it's really aggressive to blast...         NaN   \n",
+    "4  VirginAmerica and it's a really big bad thing...         NaN   \n",
     "\n",
     "               tweet_created tweet_location               user_timezone  \n",
     "0  2015-02-24 11:35:52 -0800            NaN  Eastern Time (US & Canada)  \n",
@@ -163,9 +150,7 @@
   {
    "cell_type": "code",
    "execution_count": 50,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "from sklearn.cross_validation import train_test_split\n",
@@ -420,9 +405,7 @@
   {
    "cell_type": "code",
    "execution_count": 59,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -454,9 +437,7 @@
   {
    "cell_type": "code",
    "execution_count": 47,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -493,9 +474,7 @@
   {
    "cell_type": "code",
    "execution_count": 48,
-   "metadata": {
-    "collapsed": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -548,9 +527,9 @@
  "metadata": {
   "anaconda-cloud": {},
   "kernelspec": {
-   "display_name": "Python [conda root]",
+   "display_name": "Python 3",
    "language": "python",
-   "name": "conda-root-py"
+   "name": "python3"
   },
   "language_info": {
    "codemirror_mode": {
@@ -562,7 +541,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.5.2"
+   "version": "3.6.1"
   }
  },
  "nbformat": 4,
