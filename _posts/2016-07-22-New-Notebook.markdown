@@ -6,7 +6,7 @@ tags: 		  jupyter workflows template
 #subtitle:   Predicting Survival Rates on Titanic
 category:   project1
 
-link: https://github.com/degravek/notebooks/blob/master/project_tweepy.ipynb?flush_cache=true
+link: http://nbviewer.jupyter.org/github/degravek/notebooks/blob/master/project_tweepy.ipynb?flush_cache=true
 notebookfilename: project_tweepy
 #visualworkflow: true
 ---
